@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo de Xadrez</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      margin-top: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    #tabuleiro-container {
+      display: grid;
+      grid-template-columns: repeat(8, 60px);
+      grid-template-rows: repeat(8, 60px);
+      border: 4px solid #333;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .square {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 40px;
+      cursor: pointer;
+    }
+
+    .white { background-color: #f0d9b5; }
+    .black { background-color: #b58863; }
+
+    .square:hover {
+      filter: brightness(1.2);
+    }
+  </style>
+</head>
+<body>
+  <h1>Jogo de Xadrez</h1>
+
+  <div id="tabuleiro-container">
+    <!-- Linha 8 -->
+    <div class="square black">&#9820;</div>
+    <div class="square white">&#9822;</div>
+    <div class="square black">&#9821;</div>
+    <div class="square white">&#9819;</div>
+    <div class="square black">&#9818;</div>
+    <div class="square white">&#9821;</div>
+    <div class="square black">&#9822;</div>
+    <div class="square white">&#9820;</div>
+
+    <!-- Linha 7 -->
+    <div class="square white">&#9823;</div>
+    <div class="square black">&#9823;</div>
+    <div class="square white">&#9823;</div>
+    <div class="square black">&#9823;</div>
+    <div class="square white">&#9823;</div>
+    <div class="square black">&#9823;</div>
+    <div class="square white">&#9823;</div>
+    <div class="square black">&#9823;</div>
+
+    <!-- Linha 6 -->
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+
+    <!-- Linha 5 -->
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+
+    <!-- Linha 4 -->
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+
+    <!-- Linha 3 -->
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+    <div class="square black"></div>
+    <div class="square white"></div>
+
+    <!-- Linha 2 -->
+    <div class="square black">&#9817;</div>
+    <div class="square white">&#9817;</div>
+    <div class="square black">&#9817;</div>
+    <div class="square white">&#9817;</div>
+    <div class="square black">&#9817;</div>
+    <div class="square white">&#9817;</div>
+    <div class="square black">&#9817;</div>
+    <div class="square white">&#9817;</div>
+
+    <!-- Linha 1 -->
+    <div class="square white">&#9814;</div> <!-- Torre branca -->
+    <div class="square black">&#9816;</div> <!-- Cavalo branca -->
+    <div class="square white">&#9815;</div> <!-- Bispo branca -->
+    <div class="square black">&#9813;</div> <!-- Dama branca -->
+    <div class="square white">&#9812;</div> <!-- Rei branca -->
+    <div class="square black">&#9815;</div> <!-- Bispo branca -->
+    <div class="square white">&#9816;</div> <!-- Cavalo branca -->
+    <div class="square black">&#9814;</div> <!-- Torre branca -->
+  </div>
+</body>
+</html>

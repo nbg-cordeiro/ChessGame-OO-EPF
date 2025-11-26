@@ -1,0 +1,20 @@
+#tabuleiro-container {
+  display: grid;
+  grid-template-columns: repeat(8, 60px);
+  grid-template-rows: repeat(8, 60px);
+  gap: 0;
+
+  width: 480px;      /* 8 colunas × 60px */
+  margin-left: auto; /* centraliza horizontalmente */
+  margin-right: auto;
+  margin-top: 50px;  /* distância do topo */    
+}
+
+.square {
+  width: 60px;
+  height: 60px;
+}
+
+.square.white { background-color: #f0d9b5; }
+.square.black { background-color: #b58863; }
+.square:hover { filter: brightness(1.2); cursor: pointer; }
