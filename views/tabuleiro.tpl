@@ -123,12 +123,28 @@
             const data = await response.json();
 
             if (data.valid) {
-                // Se o Python disse que pode, atualiza o tabuleiro visualmente
                 updateBoard(data.board);
                 
                 let msg = `Vez das: ${data.turn === 'white' ? 'Brancas' : 'Pretas'}`;
-                if (data.check) msg += " (XEQUE!)";
+                
+                // Verifica XEQUE
+                if (data.check) {
+                    msg += " (XEQUE!)";
+                    document.body.style.backgroundColor = "#5a2e2e"; // Fundo avermelhado de tensão
+                } else {
+                    document.body.style.backgroundColor = "#2c3e50"; // Volta ao normal
+                }
+
+                // --- NOVIDADE: Verifica MATE ---
+                if (data.mate) {
+                    msg = `XEQUE-MATE! Vencedor: ${data.turn === 'white' ? 'Pretas' : 'Brancas'}`;
+                    alert("FIM DE JOGO: " + msg);
+                    // Opcional: Bloquear o tabuleiro
+                    document.getElementById('tabuleiro').style.pointerEvents = 'none';
+                }
+                
                 statusDiv.innerText = msg;
+                
             } else {
                 // Se o Python proibiu (movimento ilegal)
                 statusDiv.innerText = `Erro: ${data.error}`;
