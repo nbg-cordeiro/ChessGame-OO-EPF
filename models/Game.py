@@ -1,12 +1,11 @@
 import copy
-from BoardInitialize import Board
-from pawn import Pawn
-from queen import Queen
-from rook import Rook
-from knight import Knight
-from bishop import Bishop
-from king import King
-
+from models.BoardInitialize import Board
+from models.pawn import Pawn
+from models.queen import Queen
+from models.rook import Rook
+from models.knight import Knight
+from models.bishop import Bishop
+from models.king import King
 class Game:
 
     def __init__(self):

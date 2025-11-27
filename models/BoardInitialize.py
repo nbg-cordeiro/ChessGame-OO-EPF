@@ -1,9 +1,9 @@
-from pawn import Pawn
-from bishop import Bishop
-from rook import Rook
-from knight import Knight
-from queen import Queen
-from king import King
+from models.pawn import Pawn
+from models.bishop import Bishop
+from models.rook import Rook
+from models.knight import Knight
+from models.queen import Queen
+from models.king import King
 
 class Board:
 
@@ -50,4 +50,21 @@ class Board:
                 print("", 8 - i)
             print("   a  b  c  d  e  f  g  h")
 
-
+    def to_matrix(self):
+        """Converte o tabuleiro de Objetos para Dicionários (JSON)"""
+        matrix_visual = []
+        
+        for row in self.game:
+            new_row = []
+            for piece in row:
+                if piece is None:
+                    new_row.append(None)
+                else:
+                    piece_info = {
+                        "type": piece.__class__.__name__,  
+                        "color": piece.color             
+                    }
+                    new_row.append(piece_info)
+            matrix_visual.append(new_row)
+            
+        return matrix_visual

@@ -1,5 +1,5 @@
-from piece import Piece
-from queen import Queen
+from models.piece import Piece
+from models.queen import Queen
 
 class Pawn(Piece):
 
