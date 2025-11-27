@@ -1,1 +1,8 @@
-[]
+[
+    {
+        "id": 1,
+        "name": "testenildo",
+        "email": "testenildo@gmail.com",
+        "birthdate": "1967-06-07"
+    }
+]
