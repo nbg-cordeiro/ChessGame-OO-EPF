@@ -46,153 +46,186 @@
     }
     
     .error { color: red; }
+
+ /* --- ADICIONADO: coordenadas do tabuleiro --- */
+    .board-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .coords {
+        position: absolute;
+        font-size: 16px;
+        font-weight: bold;
+        font-family: sans-serif;
+        pointer-events: none;
+        color: #333;
+        z-index: 5;
+    }
+
+    .coords-left {
+        left: -25px;
+        top: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .coords-bottom {
+        bottom: -25px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
 </style>
 
+
+<!-- Código HTML+JS organizado com coordenadas ao redor do tabuleiro -->
 <div class="chess-container">
     <div id="status-msg">Vez das Brancas</div>
 
-    <div id="tabuleiro">
-        % # Dicionário para traduzir Classes Python -> Símbolos Unicode do Xadrez
-        % symbols = {
-        %   'white': {'King': '&#9812;', 'Queen': '&#9813;', 'Rook': '&#9814;', 'Bishop': '&#9815;', 'Knight': '&#9816;', 'Pawn': '&#9817;'},
-        %   'black': {'King': '&#9818;', 'Queen': '&#9819;', 'Rook': '&#9820;', 'Bishop': '&#9821;', 'Knight': '&#9822;', 'Pawn': '&#9823;'}
-        % }
-        % columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-        
-        % for r, row in enumerate(board):
-            % for c, piece in enumerate(row):
-                % # Calcula se a casa é branca ou preta
-                % color_class = "white-cell" if (r + c) % 2 == 0 else "black-cell"
-                
-                % # Cria o ID tipo "a1", "h8" para o JavaScript achar a casa
-                % pos_id = f"{columns[c]}{8 - r}"
-                
-                <div class="square {{color_class}}" 
-                     id="{{pos_id}}" 
-                     onclick="handleClick('{{pos_id}}')">
-                    
-                    % if piece:
-                        {{!symbols[piece['color']][piece['type']]}}
-                    % end
-                </div>
+    <div class="board-wrapper">
+
+        <!-- Números à esquerda -->
+        <div class="coords coords-left">
+            % for num in range(8, 0, -1):
+                <div>{{num}}</div>
             % end
-        % end
+        </div>
+
+        <!-- TABULEIRO -->
+        <div id="tabuleiro">
+            % symbols = {
+            %   'white': {'King': '&#9812;', 'Queen': '&#9813;', 'Rook': '&#9814;', 'Bishop': '&#9815;', 'Knight': '&#9816;', 'Pawn': '&#9817;'},
+            %   'black': {'King': '&#9818;', 'Queen': '&#9819;', 'Rook': '&#9820;', 'Bishop': '&#9821;', 'Knight': '&#9822;', 'Pawn': '&#9823;'}
+            % }
+            % columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+
+            % for r, row in enumerate(board):
+                % for c, piece in enumerate(row):
+                    % color_class = "white-cell" if (r + c) % 2 == 0 else "black-cell"
+                    % pos_id = f"{columns[c]}{8 - r}"
+
+                    <div class="square {{color_class}}" id="{{pos_id}}" onclick="handleClick('{{pos_id}}')">
+                        % if piece:
+                            {{!symbols[piece['color']][piece['type']]}}
+                        % end
+                    </div>
+                % end
+            % end
+        </div>
+
+        <!-- Letras embaixo -->
+        <div class="coords coords-bottom">
+            % for col in ['a','b','c','d','e','f','g','h']:
+                <div>{{col}}</div>
+            % end
+        </div>
+
     </div>
-    
+
     <br>
     <button onclick="resetGame()" class="btn-submit" style="cursor: pointer; padding: 10px;">Reiniciar Jogo</button>
 </div>
 
 <script>
-    let selectedCell = null;
+let selectedCell = null;
 
-    async function handleClick(position) {
-        const cell = document.getElementById(position);
-        const statusDiv = document.getElementById('status-msg');
-        statusDiv.className = ""; // Tira cor de erro
+async function handleClick(position) {
+    const cell = document.getElementById(position);
+    const statusDiv = document.getElementById('status-msg');
+    statusDiv.className = "";
 
-        // --- CENA 1: Primeiro Clique (Selecionar Peça) ---
-        if (!selectedCell) {
-            // Só seleciona se tiver algo escrito dentro (uma peça)
-            if (cell.innerText.trim() !== "") {
-                selectedCell = position;
-                cell.classList.add('selected');
-                statusDiv.innerText = `Selecionado: ${position}. Clique no destino.`;
-            }
-            return;
+    if (!selectedCell) {
+        if (cell.innerText.trim() !== "") {
+            selectedCell = position;
+            cell.classList.add('selected');
+            statusDiv.innerText = `Selecionado: ${position}. Clique no destino.`;
         }
+        return;
+    }
 
-        // --- CENA 2: Clicou na mesma casa (Cancelar) ---
-        if (selectedCell === position) {
-            clearSelection();
-            statusDiv.innerText = "Seleção cancelada.";
-            return;
-        }
-
-        // --- CENA 3: Segundo Clique (Tentar Mover) ---
-        statusDiv.innerText = "Processando...";
-        
-        try {
-            // Manda os dados pro Python (GameController)
-            const response = await fetch('/move', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ start: selectedCell, end: position })
-            });
-
-            const data = await response.json();
-
-            if (data.valid) {
-                updateBoard(data.board);
-                
-                let msg = `Vez das: ${data.turn === 'white' ? 'Brancas' : 'Pretas'}`;
-                
-                // Verifica XEQUE
-                if (data.check) {
-                    msg += " (XEQUE!)";
-                    document.body.style.backgroundColor = "#5a2e2e"; // Fundo avermelhado de tensão
-                } else {
-                    document.body.style.backgroundColor = "#2c3e50"; // Volta ao normal
-                }
-
-                // --- NOVIDADE: Verifica MATE ---
-                if (data.mate) {
-                    msg = `XEQUE-MATE! Vencedor: ${data.turn === 'white' ? 'Pretas' : 'Brancas'}`;
-                    alert("FIM DE JOGO: " + msg);
-                    // Opcional: Bloquear o tabuleiro
-                    document.getElementById('tabuleiro').style.pointerEvents = 'none';
-                }
-                
-                statusDiv.innerText = msg;
-                
-            } else {
-                // Se o Python proibiu (movimento ilegal)
-                statusDiv.innerText = `Erro: ${data.error}`;
-                statusDiv.classList.add("error");
-            }
-        } catch (error) {
-            console.error(error);
-            statusDiv.innerText = "Erro de conexão com o servidor.";
-        }
-
+    if (selectedCell === position) {
         clearSelection();
+        statusDiv.innerText = "Seleção cancelada.";
+        return;
     }
 
-    function clearSelection() {
-        if (selectedCell) {
-            document.getElementById(selectedCell).classList.remove('selected');
-            selectedCell = null;
+    statusDiv.innerText = "Processando...";
+
+    try {
+        const response = await fetch('/move', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ start: selectedCell, end: position })
+        });
+
+        const data = await response.json();
+
+        if (data.valid) {
+            updateBoard(data.board);
+
+            let msg = `Vez das: ${data.turn === 'white' ? 'Brancas' : 'Pretas'}`;
+
+            if (data.check) {
+                msg += " (XEQUE!)";
+                document.body.style.backgroundColor = "#5a2e2e";
+            } else {
+                document.body.style.backgroundColor = "#2c3e50";
+            }
+
+            if (data.mate) {
+                msg = `XEQUE-MATE! Vencedor: ${data.turn === 'white' ? 'Pretas' : 'Brancas'}`;
+                alert("FIM DE JOGO: " + msg);
+                document.getElementById('tabuleiro').style.pointerEvents = 'none';
+            }
+
+            statusDiv.innerText = msg;
+        } else {
+            statusDiv.innerText = `Erro: ${data.error}`;
+            statusDiv.classList.add("error");
         }
+    } catch (error) {
+        console.error(error);
+        statusDiv.innerText = "Erro de conexão com o servidor.";
     }
 
-    // Função que redesenha as peças baseada na Matriz nova que veio do Python
-    function updateBoard(matrix) {
-        const columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-        
-        // Dicionário igual ao do Python para traduzir JSON -> Unicode
-        const symbols = {
-            'white': {'King': '&#9812;', 'Queen': '&#9813;', 'Rook': '&#9814;', 'Bishop': '&#9815;', 'Knight': '&#9816;', 'Pawn': '&#9817;'},
-            'black': {'King': '&#9818;', 'Queen': '&#9819;', 'Rook': '&#9820;', 'Bishop': '&#9821;', 'Knight': '&#9822;', 'Pawn': '&#9823;'}
-        };
+    clearSelection();
+}
 
-        for (let r = 0; r < 8; r++) {
-            for (let c = 0; c < 8; c++) {
-                const piece = matrix[r][c];
-                const posId = `${columns[c]}${8 - r}`;
-                const cell = document.getElementById(posId);
-                
-                cell.innerHTML = ""; // Limpa a casa
-                
-                if (piece) {
-                    // Pega o código unicode correto
-                    cell.innerHTML = symbols[piece.color][piece.type];
-                }
+function clearSelection() {
+    if (selectedCell) {
+        document.getElementById(selectedCell).classList.remove('selected');
+        selectedCell = null;
+    }
+}
+
+function updateBoard(matrix) {
+    const columns = ['a','b','c','d','e','f','g','h'];
+    const symbols = {
+        'white': {'King':'&#9812;','Queen':'&#9813;','Rook':'&#9814;','Bishop':'&#9815;','Knight':'&#9816;','Pawn':'&#9817;'},
+        'black': {'King':'&#9818;','Queen':'&#9819;','Rook':'&#9820;','Bishop':'&#9821;','Knight':'&#9822;','Pawn':'&#9823;'}
+    };
+
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+            const piece = matrix[r][c];
+            const posId = `${columns[c]}${8 - r}`;
+            const cell = document.getElementById(posId);
+
+            cell.innerHTML = "";
+
+            if (piece) {
+                cell.innerHTML = symbols[piece.color][piece.type];
             }
         }
     }
-    
-    async function resetGame() {
-        await fetch('/reset', {method: 'POST'});
-        window.location.reload();
-    }
+}
+
+async function resetGame() {
+    await fetch('/reset', {method: 'POST'});
+    window.location.reload();
+}
 </script>
