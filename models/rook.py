@@ -1,6 +1,6 @@
 from typing import is_protocol
 
-from piece import Piece
+from models.piece import Piece
 
 class Rook(Piece):
 

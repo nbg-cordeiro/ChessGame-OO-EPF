@@ -1,5 +1,5 @@
-from piece import Piece
-from king import King
+from models.piece import Piece
+from models.king import King
 
 class Bishop(Piece):
 

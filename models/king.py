@@ -1,7 +1,4 @@
-from tkinter.messagebox import RETRY
-from xmlrpc.client import FastUnmarshaller
-
-from piece import Piece
+from models.piece import Piece
 
 class King(Piece):
 
