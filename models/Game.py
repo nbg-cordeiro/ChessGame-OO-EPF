@@ -12,7 +12,7 @@ class Game:
         
         self.board = Board()    
         self.turn = 'white'
-
+        self.jogadas = 0
         
 
     def getPiece(self, position):
@@ -55,6 +55,8 @@ class Game:
 
         if piece.color != self.turn:
             return {"valid": False, "error": "Not your piece"}
+        
+        target_piece = self.getPiece(end)
 
         # 2. Simular jogada
         temp_board = copy.deepcopy(self.board)
@@ -68,6 +70,14 @@ class Game:
         if not piece.makeMoves(start, end, self.board):
             return {"valid": False, "error": "Invalid move for this piece"}
 
+        if isinstance(piece,Pawn) or target_piece is not None:
+
+            self.jogadas = 0
+
+        else:
+
+            self.jogadas+=1
+
         # 4. Checar se deu cheque no inimigo
         enemy_color = "black" if self.turn == "white" else "white"
         in_check = self.isKingInCheck(self.board, enemy_color)
@@ -78,6 +88,10 @@ class Game:
         #verficacao_mate(daniel)
         is_mate = self.is_checkmate(self.turn)
 
+        empate = self.is_draw()
+
+        afogamento = self.afogamento(self.turn)
+
         # 6. Retornar resultado
         return {
             "valid": True,
@@ -86,7 +100,15 @@ class Game:
             "board": self.board.to_matrix() if hasattr(self.board, "to_matrix") else None,
             
             #verificacao_mate(daniel)
-            "mate": is_mate
+            "mate": is_mate,
+
+            #verificacao empate 67(Eduardo)
+            "empate": empate,
+
+            #verificacao aforamento (eduardo)
+
+            "afogamento": afogamento,
+
         }
 
     # método auxiliar para mexer peças no board temporário
@@ -140,4 +162,66 @@ class Game:
                                     return False
                                     
         return True
+    
+    def afogamento(self, color):
+
+        #Se o rei ta em cheque, NÃO é afogamento
+        if self.isKingInCheck(self.board, color):
+            return False
+
+        #Tentar achar qualquer jogada legal
+        for r_start in range(8):
+            for c_start in range(8):
+                piece = self.board.game[r_start][c_start]
+
+                if piece is not None and piece.color == color:
+                    start_pos = self.idx_to_notation(r_start, c_start)
+
+                    for r_end in range(8):
+                        for c_end in range(8):
+                            end_pos = self.idx_to_notation(r_end, c_end)
+
+                            if start_pos == end_pos:
+                                continue
+
+                            temp_board = copy.deepcopy(self.board)
+                            temp_piece = temp_board.game[r_start][c_start]
+
+                            valid_geom = False
+                            try:
+                                valid_geom = temp_piece.makeMoves(start_pos, end_pos, temp_board)
+                            except:
+                                valid_geom = False
+
+                            if valid_geom:
+                                # Se a jogada existe E não deixa o rei em cheque → não é afogamento
+                                if not self.isKingInCheck(temp_board, color):
+                                    return False
+
+        #Sem cheque + sem jogadas legais = AFOGAMENTO
+        return True
+    
+    def is_draw(self):
+    # Deu 50 jogadas
+    
+        if self.jogadas >= 50:
+            return True
+
+        # só tem rei
+        pieces = []
+
+        for row in self.board.game:
+            for p in row:
+                if p is not None:
+                    pieces.append(p)
+
+        # Apenas dois reis no tabuleiro
+        if len(pieces) == 2:
+            if isinstance(pieces[0], King) and isinstance(pieces[1], King):
+                return True
+
+        return False
+
+
+  
         
