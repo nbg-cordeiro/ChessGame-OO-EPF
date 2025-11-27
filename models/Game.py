@@ -74,13 +74,19 @@ class Game:
 
         # 5. Trocar turno
         self.turn = enemy_color
+        
+        #verficacao_mate(daniel)
+        is_mate = self.is_checkmate(self.turn)
 
         # 6. Retornar resultado
         return {
             "valid": True,
             "check": in_check,
             "turn": self.turn,
-            "board": self.board.to_matrix() if hasattr(self.board, "to_matrix") else None
+            "board": self.board.to_matrix() if hasattr(self.board, "to_matrix") else None,
+            
+            #verificacao_mate(daniel)
+            "mate": is_mate
         }
 
     # método auxiliar para mexer peças no board temporário
@@ -91,5 +97,47 @@ class Game:
         board.game[row][col] = piece
 
 
+    #metodos para mate (daniel)
+    
+    def idx_to_notation(self, row, col):
 
+        return chr(col + ord('a')) + str(8 - row)
+
+    def is_checkmate(self, color):
+        if not self.isKingInCheck(self.board, color):
+            return False
+
+        for r_start in range(8):
+            for c_start in range(8):
+                piece = self.board.game[r_start][c_start]
+                
+    
+                if piece is not None and piece.color == color:
+                    start_pos = self.idx_to_notation(r_start, c_start)
+                    
+                    for r_end in range(8):
+                        for c_end in range(8):
+                            end_pos = self.idx_to_notation(r_end, c_end)
+                            
+                            if start_pos == end_pos: continue
+                            
+            
+                            temp_board = copy.deepcopy(self.board)
+                            
+    
+                            temp_piece = temp_board.game[r_start][c_start]
+
+                            valid_geom = False
+                            try:
+                                valid_geom = temp_piece.makeMoves(start_pos, end_pos, temp_board)
+                            except:
+                                valid_geom = False
+                            
+                            if valid_geom:
+               
+                                if not self.isKingInCheck(temp_board, color):
+                          
+                                    return False
+                                    
+        return True
         
