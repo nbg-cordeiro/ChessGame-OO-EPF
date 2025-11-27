@@ -1,11 +1,13 @@
 import copy
-from BoardInitialize import Board
-from pawn import Pawn
-from queen import Queen
-from rook import Rook
-from knight import Knight
-from bishop import Bishop
-from king import King
+import sys
+import os
+from models.BoardInitialize import Board
+from models.pawn import Pawn
+from models.queen import Queen
+from models.rook import Rook
+from models.knight import Knight
+from models.bishop import Bishop
+from models.king import King
 
 def getPiece(board, position):
     col = ord(position[0]) - ord('a')
