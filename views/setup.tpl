@@ -1,3 +1,9 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="/static/css/botaohome.css">
+
+<a href="/" class="btn-home">
+    <i class="fas fa-home"></i> Página Inicial
+</a>
 
 <style>
 
