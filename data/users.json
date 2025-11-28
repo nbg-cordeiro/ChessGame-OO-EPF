@@ -1,1 +1,68 @@
-[]
+[
+    {
+        "id": 1,
+        "name": "testenildo",
+        "email": "testenildo@gmail.com",
+        "birthdate": "1967-06-12"
+    },
+    {
+        "id": 2,
+        "name": "SigmaShadow",
+        "email": "sigmashadow@gmail.com",
+        "birthdate": "2002-03-17"
+    },
+    {
+        "id": 3,
+        "name": "RizzMaster9000",
+        "email": "rizzmaster9000@gmail.com",
+        "birthdate": "2001-10-05"
+    },
+    {
+        "id": 4,
+        "name": "AuraCollector",
+        "email": "auracollector@gmail.com",
+        "birthdate": "1999-04-22"
+    },
+    {
+        "id": 5,
+        "name": "EgoFarmerX",
+        "email": "egofarmerx@gmail.com",
+        "birthdate": "1998-09-13"
+    },
+    {
+        "id": 6,
+        "name": "RizzlerPrime",
+        "email": "rizzlerprime@gmail.com",
+        "birthdate": "2005-01-30"
+    },
+    {
+        "id": 7,
+        "name": "AuraSyncVibes",
+        "email": "aurasyncvibes@gmail.com",
+        "birthdate": "1997-08-19"
+    },
+    {
+        "id": 8,
+        "name": "EgoTitan",
+        "email": "egotitan@gmail.com",
+        "birthdate": "2000-02-28"
+    },
+    {
+        "id": 9,
+        "name": "UltraSigmaMode",
+        "email": "ultrasigmamode@gmail.com",
+        "birthdate": "2003-07-07"
+    },
+    {
+        "id": 10,
+        "name": "RizzJuicer",
+        "email": "rizzjuicer@gmail.com",
+        "birthdate": "2004-05-14"
+    },
+    {
+        "id": 11,
+        "name": "AuraFarmer77",
+        "email": "aurafarmer77@gmail.com",
+        "birthdate": "1996-12-03"
+    }
+]

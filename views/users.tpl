@@ -1,4 +1,12 @@
-%rebase('layout', title='Usuários')
+% rebase('layout', title='Usuários')
+
+<!-- Link para o CSS Externo -->
+<link rel="stylesheet" href="/static/css/users.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<a href="/" class="btn-home">
+    <i class="fas fa-home"></i> Página Inicial
+</a>
 
 <section class="users-section">
     <div class="section-header">
@@ -10,7 +18,6 @@
 
     <div class="table-container">
         <table class="styled-table">
-            
             <thead>
                 <tr>
                     <th>ID</th>
@@ -20,7 +27,6 @@
                     <th>Ações</th>
                 </tr>
             </thead>
-
             <tbody>
                 % for u in users:
                 <tr>
@@ -30,16 +36,9 @@
                     <td>{{u.birthdate}}</td>
                     
                     <td class="actions">
-                        <a href="/users/edit/{{u.id}}" class="btn btn-sm btn-edit">
-                            <i class="fas fa-edit"></i> Editar
+                        <a href="/profile/{{u.id}}" class="btn btn-sm btn-info">
+                            <i class="fas fa-user-circle"></i> Perfil
                         </a>
-
-                        <form action="/users/delete/{{u.id}}" method="post" 
-                              onsubmit="return confirm('Tem certeza?')">
-                            <button type="submit" class="btn btn-sm btn-danger">
-                                <i class="fas fa-trash-alt"></i> Excluir
-                            </button>
-                        </form>
                     </td>
                 </tr>
                 % end

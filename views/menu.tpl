@@ -49,11 +49,11 @@
         box-shadow: 0 6px 10px rgba(0,0,0,0.2);
     }
 
-    .btn-cadastrar {
+    .btn-jogadores {
         background-color: #2980b9;
         color: white;
     }
-    .btn-cadastrar:hover {
+    .btn-jogadores:hover {
         background-color: #2472a4;
         transform: translateY(-3px);
     }
@@ -76,8 +76,8 @@
         <i class="fas fa-chess-board"></i> Iniciar Jogo
     </a>
 
-    <a href="/users/add" class="botao-menu btn-cadastrar">
-        <i class="fas fa-user-plus"></i> Cadastrar Jogador
+    <a href="/users" class="botao-menu btn-jogadores">
+        <i class="fas fa-user-plus"></i> Jogadores
     </a>
 
     <a href="/ranking" class="botao-menu btn-ranking">
@@ -85,6 +85,7 @@
     </a>
     
     <div class="rodape-menu">
-        Jogadores cadastrados. <a href="/users">Listar Jogadores</a>
+        Não é um jogador?
+        Cadastre-se <a href="/users/add"> clicando aqui!</a>
     </div>
 </div>    
