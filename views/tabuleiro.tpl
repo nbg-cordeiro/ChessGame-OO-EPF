@@ -181,6 +181,16 @@ async function handleClick(position) {
                 alert("FIM DE JOGO: " + msg);
                 document.getElementById('tabuleiro').style.pointerEvents = 'none';
             }
+            else if(data.afogamento){
+                msg = `Afogamento! O jogo empatou!`;
+                alert("FIM DE JOGO: " + msg);
+                document.getElementById('tabuleiro').style.pointerEvents = 'none';
+            }
+            else if(data.empate){
+                msg = `O jogo empatou!`;
+                alert("FIM DE JOGO: " + msg);
+                document.getElementById('tabuleiro').style.pointerEvents = 'none';
+            }
 
             statusDiv.innerText = msg;
         } else {
