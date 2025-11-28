@@ -1,125 +1,119 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil de {{user.name}}</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; color: #333; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        
-        /* Cabeçalho do Perfil */
-        .header { border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
-        .header h1 { margin: 0; color: #2c3e50; }
-        
-        /* Formulário */
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; }
-        input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; box-sizing: border-box; }
-        .info-static { background: #e9ecef; padding: 10px; border-radius: 4px; color: #555; }
-        
-        .btn-save { background-color: #28a745; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 4px; margin-top: 10px; }
-        .btn-save:hover { background-color: #218838; }
+% rebase('layout', title='Perfil do Usuário')
 
-        /* Tabela de Jogos */
-        h2 { border-left: 5px solid #007bff; padding-left: 10px; margin-top: 40px; color: #007bff; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #007bff; color: white; }
-        tr:hover { background-color: #f1f1f1; }
+<!-- Link para o CSS específico desta página -->
+<link rel="stylesheet" href="/static/css/profile.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<a href="/" class="btn-home">
+    <i class="fas fa-home"></i> Página Inicial
+</a>
+
+<div class="profile-container">
+
+    <!-- COLUNA DA ESQUERDA: IDENTIDADE -->
+    <aside class="profile-card">
+        <h1 class="profile-name">{{user.name}}</h1>
+        <p class="profile-id">ID: #{{user.id}}</p>
         
-        .status-active { color: #e67e22; font-weight: bold; }
-        .status-finished { color: #28a745; font-weight: bold; }
-        .win-badge { background-color: gold; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; color: #333; margin-left: 5px; }
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
 
-        .btn-back { display: inline-block; margin-top: 30px; color: #666; text-decoration: none; border: 1px solid #ccc; padding: 8px 16px; border-radius: 4px; }
-        .btn-back:hover { background-color: #eee; }
-    </style>
-</head>
-<body>
+        <!-- Botão Voltar -->
+        <a href="/users" class="btn-primary" style="width: 100%;">
+            <i class="fas fa-arrow-left"></i> Voltar para Lista
+        </a>
+    </aside>
 
-<div class="container">
-    
-    <div class="header">
-        <h1>Perfil do Jogador</h1>
-    </div>
-
-    <form action="/profile/{{user.id}}" method="POST">
+    <!-- COLUNA DA DIREITA: CONTEÚDO -->
+    <main class="main-content">
         
-        <div class="form-group">
-            <label for="name">Nome de Exibição:</label>
-            <input type="text" id="name" name="name" value="{{user.name}}" required>
+        <!-- CAIXA 1: EDITAR DADOS -->
+        <div class="content-box">
+            <h2 class="box-title"><i class="fas fa-user-edit"></i> Editar Informações</h2>
+            
+            <form action="/users/edit/{{user.id}}" method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nome Completo</label>
+                        <input type="text" name="name" value="{{user.name}}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Data de Nascimento</label>
+                        <input type="date" name="birthdate" value="{{user.birthdate}}" required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Email</label>
+                        <input type="email" name="email" value="{{user.email}}" required>
+                    </div>
+                </div>
+
+                <div style="text-align: right; margin-top: 10px;">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Salvar Alterações
+                    </button>
+                </div>
+            </form>
         </div>
 
-        <div class="form-group">
-            <label>Email (Não editável):</label>
-            <div class="info-static">{{user.email}}</div>
-        </div>
+        <!-- CAIXA 2: HISTÓRICO DE JOGOS -->
+        <div class="content-box">
+            <h2 class="box-title"><i class="fas fa-chess-board"></i> Histórico de Partidas</h2>
 
-        <div class="form-group">
-            <label>ID do Jogador:</label>
-            <div class="info-static">#{{user.id}}</div>
-        </div>
+            % if not games:
+                <div style="text-align: center; color: #888; padding: 20px;">
+                    <i class="fas fa-chess-pawn" style="font-size: 30px; margin-bottom: 10px; display: block;"></i>
+                    Este usuário ainda não jogou nenhuma partida.
+                </div>
+            % else:
+                <div class="table-container">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Jogo</th>
+                                <th>Oponente</th>
+                                <th>Cor</th>
+                                <th>Status</th>
+                                <th>Resultado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        % for game in games:
+                            % is_p1 = (str(game.player1) == str(user.name))
+                            % opponent = game.player2 if is_p1 else game.player1
+                            % my_color = "Brancas" if is_p1 else "Pretas"
+                            
+                            <tr>
+                                <td><strong>#{{game.id}}</strong></td>
+                                <td>Vs. {{opponent}}</td>
+                                <td>{{my_color}}</td>
+                                
+                                <td>
+                                    % if game.status == 'active':
+                                        <span class="badge badge-active">Em Andamento</span>
+                                    % else:
+                                        <span class="badge badge-finished">Finalizado</span>
+                                    % end
+                                </td>
 
-        <input type="hidden" name="email" value="{{user.email}}">
-        <input type="hidden" name="birthdate" value="{{user.birthdate}}">
-
-        <button type="submit" class="btn-save">Salvar Alterações</button>
-    </form>
-
-
-    <h2>Histórico de Partidas</h2>
-
-    % if not games:
-        <p style="color: #777; font-style: italic;">Este jogador ainda não participou de nenhuma partida.</p>
-    % else:
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Oponente</th>
-                    <th>Você jogou de</th>
-                    <th>Status</th>
-                    <th>Vencedor</th>
-                </tr>
-            </thead>
-            <tbody>
-            % for game in games:
-                % is_p1 = (str(game.player1) == str(user.name))
-                % opponent = game.player2 if is_p1 else game.player1
-                % my_color = "Brancas" if is_p1 else "Pretas"
-                
-                <tr>
-                    <td><strong>#{{game.id}}</strong></td>
-                    <td>Vs. {{opponent}}</td>
-                    <td>{{my_color}}</td>
-                    
-                    <td>
-                        % if game.status == 'active':
-                            <span class="status-active">Em Andamento</span>
-                        % else:
-                            <span class="status-finished">Finalizado</span>
+                                <td>
+                                    % if game.winner:
+                                        % if game.winner == user.name:
+                                            <span class="badge badge-win"><i class="fas fa-trophy"></i> Vitória</span>
+                                        % else:
+                                            <span class="badge badge-loss"><i class="fas fa-times"></i> Derrota</span>
+                                        % end
+                                    % else:
+                                        -
+                                    % end
+                                </td>
+                            </tr>
                         % end
-                    </td>
-
-                    <td>
-                        % if game.winner:
-                            {{game.winner}}
-                            % if game.winner == user.name:
-                                <span class="win-badge">VITÓRIA</span>
-                            % end
-                        % else:
-                            -
-                        % end
-                    </td>
-                </tr>
+                        </tbody>
+                    </table>
+                </div>
             % end
-            </tbody>
-        </table>
-    % end
+        </div>
 
-    <a href="/users" class="btn-back">← Voltar para Lista de Usuários</a>
+    </main>
 </div>
-
-</body>
-</html>
