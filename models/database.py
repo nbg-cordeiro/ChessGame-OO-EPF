@@ -53,7 +53,7 @@ def init_db():
     
     conn.commit()
     conn.close()
-    print(f"[OK] Banco de dados conectado em: {DB_NAME}")
+    print(f"✅ Banco de dados conectado em: {DB_NAME}")
 
 # Inicializa ao importar
 init_db()
