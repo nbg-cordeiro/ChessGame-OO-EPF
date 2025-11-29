@@ -1,4 +1,4 @@
-/* Layout Principal (Grid Dashboard) */
+/* Layout Principal (Dashboard Grid) */
 .profile-wrapper {
     display: flex;
     justify-content: center;
@@ -9,10 +9,10 @@
 
 .profile-container {
     display: grid;
-    grid-template-columns: 300px 1fr; /* Sidebar fixa, Conteúdo flexível */
+    grid-template-columns: 300px 1fr; /* Sidebar fixa | Conteúdo fluido */
     gap: 30px;
     width: 100%;
-    max-width: 1200px; /* Bem largo para caber a tabela */
+    max-width: 1200px;
     animation: fadeIn 0.5s ease-out;
 }
 
@@ -33,30 +33,58 @@
     height: fit-content;
     position: sticky;
     top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
+/* --- AVATAR CENTRALIZADO CORRIGIDO --- */
 .avatar-large {
+    width: 120px;
+    height: 120px;
+    background-color: #ecf0f1;
+    border-radius: 50%;
+    /* Centraliza o bloco na sidebar */
+    margin: 0 auto 15px auto; 
+    /* Centraliza o ícone dentro da bola */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    
+    /* Ícone interno */
     font-size: 5rem;
-    color: #e0e0e0;
-    margin-bottom: 15px;
+    color: #bdc3c7;
 }
 
 .profile-name {
-    margin: 10px 0 5px 0;
+    margin: 10px 0 15px 0;
     color: var(--text-color);
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 800;
 }
 
-.profile-id {
-    color: #95a5a6;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 25px;
-    background-color: #f8f9fa;
-    display: inline-block;
-    padding: 5px 15px;
+/* --- PÍLULAS DE INFORMAÇÃO (ID e Score) --- */
+.info-pill {
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 6px 15px;
     border-radius: 20px;
+    display: inline-block;
+    margin: 5px 0; /* Espaçamento vertical entre elas */
+}
+
+.pill-id {
+    background-color: #f8f9fa;
+    color: #7f8c8d;
+    border: 1px solid #eee;
+}
+
+.pill-score {
+    background-color: #fff8e1; 
+    color: #f39c12;            
+    border: 1px solid #ffe0b2;
 }
 
 /* Conteúdo (Direita) */
@@ -75,6 +103,7 @@ h2.box-title {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-weight: 700;
 }
 
 h2.box-title i { color: var(--primary-color); }
@@ -115,12 +144,13 @@ input:focus {
 }
 
 /* --- TABELA DE HISTÓRICO --- */
-.table-container { overflow-x: auto; }
+.table-responsive { overflow-x: auto; }
 
 .styled-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
+    min-width: 500px;
 }
 
 .styled-table th {
@@ -140,11 +170,16 @@ input:focus {
 
 .styled-table tr:last-child td { border-bottom: none; }
 
-/* Badges (Etiquetas de Status) */
-.badge { padding: 6px 12px; border-radius: 30px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+/* Badges (Etiquetas) */
+.badge { padding: 6px 12px; border-radius: 30px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
 .badge-win { background-color: #d4edda; color: #155724; }
 .badge-loss { background-color: #f8d7da; color: #721c24; }
 .badge-active { background-color: #cce5ff; color: #004085; }
 .badge-finished { background-color: #e2e3e5; color: #383d41; }
 
 /* Responsividade */
+@media (max-width: 850px) {
+    .profile-container { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .profile-card { position: static; margin-bottom: 20px; }
+}

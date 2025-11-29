@@ -1,21 +1,11 @@
 import sqlite3
 import os
 
-# --- Configuração de Caminhos ---
-
-# 1. Pega a pasta onde este arquivo está (models)
 current_dir = os.path.dirname(os.path.abspath(__file__))
-
-# 2. Pega a raiz do projeto (uma pasta acima de models)
 project_root = os.path.dirname(current_dir)
-
-# 3. Define a pasta de dados
 data_dir = os.path.join(project_root, 'data')
-
-# 4. Garante que a pasta 'data' existe (cria se não existir)
 os.makedirs(data_dir, exist_ok=True)
 
-# 5. Define o caminho final do banco de dados dentro de 'data'
 DB_NAME = os.path.join(data_dir, 'chess_system.db')
 
 def get_connection():
@@ -24,20 +14,18 @@ def get_connection():
     return conn
 
 def init_db():
+    
     conn = get_connection()
     cursor = conn.cursor()
-    
-    # Tabela de Usuários
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             email TEXT NOT NULL,
-            birthdate TEXT NOT NULL
+            birthdate TEXT NOT NULL,
+            score INTEGER DEFAULT 0  -- <--- LINHA NOVA!
         )
     ''')
-
-    # Tabela de Jogos
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS games (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,5 +43,4 @@ def init_db():
     conn.close()
     print(f"✅ Banco de dados conectado em: {DB_NAME}")
 
-# Inicializa ao importar
 init_db()
