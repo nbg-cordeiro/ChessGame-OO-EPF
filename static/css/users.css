@@ -1,5 +1,4 @@
-/* --- Configuração Geral da Página de Usuários --- */
-body {
+ody {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f7f6;
     color: #333;
@@ -7,7 +6,7 @@ body {
     padding: 20px;
 }
 
-/* --- Container Principal (Efeito de Cartão) --- */
+
 .users-section {
     background-color: #ffffff;
     max-width: 1000px;
@@ -17,7 +16,7 @@ body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* --- Cabeçalho da Seção --- */
+
 .section-header {
     display: flex;
     justify-content: space-between;
@@ -33,7 +32,6 @@ body {
     color: #2c3e50;
 }
 
-/* --- Tabela Estilizada --- */
 .table-container {
     overflow-x: auto;
 }
@@ -114,7 +112,6 @@ body {
     color: white;
 }
 
-/* Classes utilitárias (mantidas caso precise no futuro) */
 .btn-edit {
     background-color: #ffc107;
     color: #333;
@@ -125,7 +122,6 @@ body {
     color: white;
 }
 
-/* --- Coluna de Ações --- */
 .actions {
     display: flex;
     gap: 5px;

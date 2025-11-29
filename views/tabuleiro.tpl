@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/static/css/game.css">
+<link rel="stylesheet" href="/static/css/tabuleiro.css">
 
 <div class="game-layout">
     
