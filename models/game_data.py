@@ -9,8 +9,8 @@ FILE_PATH = os.path.join(DATA_DIR, 'games.json')
 class GameData:
     """Esta classe representa apenas os DADOS do jogo, não as regras."""
     id: int
-    player1: str
-    player2: str
+    player1: int
+    player2: int
     moves: list
     status: str
     winner: str = None
@@ -71,3 +71,26 @@ class GameModel:
 
         games.append(game_data)
         self.save_all(games)
+
+    def save_finished_game(self, player1_id, player2_id, moves, winner_id, status):
+        """Calcula ID, cria objeto e salva o jogo finalizado"""
+        games = self.get_all()
+        
+        # Gera ID automático
+        if not games:
+            new_id = 1
+        else:
+            new_id = max(g.id for g in games) + 1
+            
+        new_game = GameData(
+            id=new_id,
+            player1=player1_id,
+            player2=player2_id,
+            moves=moves,
+            status=status,
+            winner=winner_id
+        )
+        
+        games.append(new_game)
+        self.save_all(games)
+        return new_id

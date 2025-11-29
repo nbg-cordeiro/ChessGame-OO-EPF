@@ -1,4 +1,4 @@
-% rebase('layout', title='Formulário de Usuário')
+% rebase('layout', title='Cadastro')
 
 <!-- Links CSS -->
 <link rel="stylesheet" href="/static/css/user_form.css">

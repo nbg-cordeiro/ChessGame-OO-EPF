@@ -2,7 +2,7 @@ import json
 from bottle import Bottle, request, response, redirect
 from .base_controller import BaseController
 from models.Game import Game
-
+from models.game_data import GameModel
 from services.user_service import UserService 
 
 class GameController(BaseController):
@@ -10,27 +10,27 @@ class GameController(BaseController):
         super().__init__(app)
         
         self.game = Game()
-        
-        
+        self.game_model = GameModel()
         self.user_service = UserService()
+        
+        # Memória temporária da partida atual
+        self.temp_game = {
+            'active': False,
+            'p1': None,
+            'p2': None,
+            'moves': []
+        }
         
         self.setup_routes()
 
     def setup_routes(self):
-
-    
         self.app.route('/', method='GET', callback=self.menu)
         self.app.route('/menu', method='GET', callback=self.menu)
-        
         self.app.route('/game/setup', method='GET', callback=self.setup_page)
-        
         self.app.route('/game/start', method='POST', callback=self.start_game)
-        
-    
         self.app.route('/game', method='GET', callback=self.index)
         self.app.route('/move', method='POST', callback=self.move_piece)
         self.app.route('/reset', method='POST', callback=self.reset_game)
-
 
     def menu(self):
         return self.render('menu')
@@ -41,31 +41,37 @@ class GameController(BaseController):
     def start_game(self):
         modo = request.forms.get('mode')
         
+        # Reinicia jogo e limpa memória temporária
+        self.game = Game()
+        self.temp_game = {'active': False, 'p1': None, 'p2': None, 'moves': []}
+
         if modo == 'ranked':
             id_p1 = request.forms.get('player1_id')
             id_p2 = request.forms.get('player2_id')
             
             try:
-
-                jogador1 = self.user_service.get_by_id(int(id_p1))
-                jogador2 = self.user_service.get_by_id(int(id_p2))
+                p1_int = int(id_p1)
+                p2_int = int(id_p2)
+                
+                jogador1 = self.user_service.get_by_id(p1_int)
+                jogador2 = self.user_service.get_by_id(p2_int)
                 
                 if not jogador1 or not jogador2:
-                    return f"ERRO: ID inválido! O jogador {id_p1} ou {id_p2} não existe. Cadastre antes de jogar."
+                    return f"ERRO: ID inválido! O jogador {id_p1} ou {id_p2} não existe."
                 
-                print(f"Iniciando Jogo Rankeado: {jogador1.name} (Brancas) vs {jogador2.name} (Pretas)")
+                # Ativa modo rankeado na memória
+                self.temp_game['active'] = True
+                self.temp_game['p1'] = p1_int
+                self.temp_game['p2'] = p2_int
+                
+                print(f"Iniciando Rankeada (Memória): {jogador1.name} vs {jogador2.name}")
                 
             except ValueError:
                 return "ERRO: Os IDs precisam ser números."
-                
         else:
             print("Iniciando Jogo Casual")
-
-        self.game = Game()
         
         return redirect('/game')
-
-    #tabuleiro
 
     def index(self):
         board_matrix = self.game.board.to_matrix()
@@ -80,9 +86,41 @@ class GameController(BaseController):
 
         resultado = self.game.try_move(start_pos, end_pos)
         
+        if resultado['valid'] and self.temp_game['active']:
+            # 1. Guarda movimento na memória
+            self.temp_game['moves'].append(f"{start_pos}-{end_pos}")
+
+            # 2. Verifica se o jogo acabou para salvar
+            game_over = False
+            winner = None
+            status = 'over'
+
+            if resultado.get('mate'):
+                game_over = True
+                # Quem jogou (vez anterior) venceu
+                winner_color = 'white' if resultado['turn'] == 'black' else 'black'
+                winner = self.temp_game['p1'] if winner_color == 'white' else self.temp_game['p2']
+            
+            elif resultado.get('afogamento') or resultado.get('empate'):
+                game_over = True
+                status = 'draw'
+                winner = None
+
+            if game_over:
+                print("Fim de jogo! Salvando no disco...")
+                self.game_model.save_finished_game(
+                    self.temp_game['p1'],
+                    self.temp_game['p2'],
+                    self.temp_game['moves'],
+                    winner,
+                    status
+                )
+                self.temp_game['active'] = False # Para de gravar
+
         response.content_type = 'application/json'
         return json.dumps(resultado)
 
     def reset_game(self):
         self.game = Game()
+        self.temp_game = {'active': False, 'p1': None, 'p2': None, 'moves': []}
         return {"status": "ok"}
