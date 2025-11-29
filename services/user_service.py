@@ -12,13 +12,13 @@ class UserService:
 
 
     def save(self):
-        last_id = max([u.id for u in self.user_model.get_all()], default=0)
-        new_id = last_id + 1
+        # Não calculamos mais ID. Passamos 0 ou None.
         name = request.forms.get('name')
         email = request.forms.get('email')
         birthdate = request.forms.get('birthdate')
 
-        user = User(id=new_id, name=name, email=email, birthdate=birthdate)
+        # id=0 indica que é um novo usuário
+        user = User(id=0, name=name, email=email, birthdate=birthdate)
         self.user_model.add_user(user)
 
 
