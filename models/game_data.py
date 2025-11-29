@@ -7,7 +7,6 @@ FILE_PATH = os.path.join(DATA_DIR, 'games.json')
 
 @dataclass
 class GameData:
-    """Esta classe representa apenas os DADOS do jogo, não as regras."""
     id: int
     player1: int
     player2: int
