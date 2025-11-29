@@ -1,36 +1,63 @@
 :root {
-  --primary-color: #3498db;
-  --secondary-color: #2980b9;
-  --danger-color: #e74c3c;
-  --success-color: #2ecc71;
-  --text-color: #333;
-  --light-gray: #f5f5f5;
-  --border-color: #ddd;
-  --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    --primary-color: #27ae60;   /* Verde */
+    --primary-hover: #219150;
+    --secondary-color: #7f8c8d; /* Cinza */
+    --secondary-hover: #616e6e;
+    --info-color: #2980b9;      /* Azul */
+    --info-hover: #2472a4;
+    --warning-color: #f39c12;   /* Laranja */
+    --warning-hover: #d35400;
+    --danger-color: #c0392b;    /* Vermelho */
+    --danger-hover: #a93226;
+    --white: #ffffff;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-  color: var(--text-color);
-  background-color: #f9f9f9;
-  padding: 0;
-  margin: 0;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f8;
 }
 
-/* Layout */
-.container {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: var(--shadow);
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    width: 100%;
+    box-sizing: border-box;
 }
 
+.btn:hover { transform: translateY(-2px); }
+
+/* Cores dos Botões */
+.btn-primary { background-color: var(--primary-color); color: var(--white); }
+.btn-primary:hover { background-color: var(--primary-hover); }
+
+.btn-secondary { background-color: var(--secondary-color); color: var(--white); }
+.btn-secondary:hover { background-color: var(--secondary-hover); }
+
+.btn-info { background-color: var(--info-color); color: var(--white); }
+.btn-info:hover { background-color: var(--info-hover); }
+
+.btn-warning { background-color: var(--warning-color); color: var(--white); }
+.btn-warning:hover { background-color: var(--warning-hover); }
+
+.btn-danger { background-color: var(--danger-color); color: var(--white); }
+.btn-danger:hover { background-color: var(--danger-hover); }
+
+/* Tamanho Grande */
+.btn-lg {
+    padding: 16px;
+    font-size: 1.2rem;
+    border-radius: 12px;
+}

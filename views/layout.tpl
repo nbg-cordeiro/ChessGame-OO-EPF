@@ -6,7 +6,7 @@
     <title>{{title or 'Xadrez Real'}}</title>
     
     <link rel="stylesheet" href="/static/css/style.css">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
