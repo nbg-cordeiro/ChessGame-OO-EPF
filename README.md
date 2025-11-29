@@ -1,105 +1,116 @@
-# Projeto Template: POO com Python + Bottle + JSON
+# ♟️ Xadrez Real - Projeto Final de POO
 
-Este é um projeto de template educacional voltado para o ensino de **Programação Orientada a Objetos (POO)** do Prof. Lucas Boaventura, Universidade de Brasília (UnB).
+Este projeto é uma aplicação web completa de **Xadrez**, desenvolvida como trabalho final da disciplina de **Programação Orientada a Objetos (POO)**.
 
-Utiliza o microframework **Bottle**. Ideal para uso em disciplinas introdutórias de Engenharia de Software ou Ciência da Computação.
+O sistema foi construído sobre o template educacional do **Prof. Lucas Boaventura** (UnB), utilizando o microframework **Bottle** e a linguagem **Python**.
 
-## 💡 Objetivo
+## 💡 Funcionalidades
 
-Fornecer uma base simples, extensível e didática para construção de aplicações web orientadas a objetos com aplicações WEB em Python, ideal para trabalhos finais ou exercícios práticos.
+O projeto vai além de um tabuleiro simples, integrando lógica de xadrez com persistência de dados e interface rica:
+
+* **⚔️ Modos de Jogo:**
+    * **Casual:** Jogue livremente sem login.
+    * **Rankeado:** Requer login (ID) dos jogadores e vale pontos no ranking.
+* **🏆 Sistema de Ranking:** Tabela de classificação dinâmica. Vitórias somam **+3 pontos**, derrotas subtraem **-3 pontos**.
+* **🧠 Lógica Completa de Xadrez:**
+    * Validação de movimentos (Peão, Torre, Cavalo, Bispo, Rainha, Rei).
+    * Detecção de **Xeque** e **Xeque-Mate**.
+    * Detecção de Empates (**Afogamento** e Material Insuficiente).
+* **🎨 Interface Profissional:**
+    * Peças em **SVG** de alta qualidade.
+    * Indicadores visuais de última jogada e seleção.
+    * Design responsivo estilo "Dashboard".
+* **🔊 Efeitos Sonoros:** Feedback auditivo para movimentos, capturas, xeque e fim de jogo.
+* **👥 Gestão de Usuários:** Cadastro, edição e exclusão de jogadores (CRUD completo).
 
 ---
 
-## 🗂 Estrutura de Pastas
+## 🗂 Estrutura do Projeto
+
+A arquitetura segue o padrão **MVC (Model-View-Controller)**:
 
 ```bash
-poo-python-bottle-template/
-├── app.py # Ponto de entrada do sistema
-├── config.py # Configurações e caminhos do projeto
-├── main.py # Inicialização da aplicação
-├── requirements.txt # Dependências do projeto
-├── README.md # Este arquivo
-├── controllers/ # Controladores e rotas
-├── models/ # Definição das entidades (ex: User)
-├── services/ # Lógica de persistência (JSON)
-├── views/ # Arquivos HTML (Bottle Templating)
-├── static/ # CSS, JS e imagens
-├── data/ # Arquivos JSON de dados
-└── .vscode/ # Configurações opcionais do VS Code
-```
+xadrez-poo-bottle/
+├── app.py              # Configuração das rotas e apps do Bottle
+├── main.py             # Ponto de entrada (Roda o servidor)
+├── config.py           # Configurações globais
+├── requirements.txt    # Dependências (bottle, etc)
+│
+├── controllers/        # A "Cola" do sistema
+│   ├── base_controller.py  # Utilitários comuns
+│   ├── game_controller.py  # Lógica do Jogo, Ranking e Navegação
+│   └── user_controller.py  # CRUD de Usuários
+│
+├── models/             # Regras de Negócio e Entidades
+│   ├── Game.py             # Motor do Xadrez (Regras, Turnos, Mate)
+│   ├── piece.py            # Classes das Peças (Herança e Polimorfismo)
+│   ├── board_initialize.py # Matriz do Tabuleiro
+│   ├── user.py             # Classe Usuário (+ Score)
+│   └── ... (pawn.py, king.py, etc)
+│
+├── services/           # Persistência de Dados
+│   └── user_service.py     # Salva usuários e atualiza pontuação no JSON
+│
+├── views/              # Front-end (HTML + Bottle Templates)
+│   ├── layout.tpl          # Base HTML (Cabeçalho/Rodapé)
+│   ├── menu.tpl            # Menu Principal (Cartão Centralizado)
+│   ├── tabuleiro.tpl       # O Jogo (Dashboard, JS e Lógica AJAX)
+│   ├── ranking.tpl         # Tabela de Classificação
+│   ├── setup.tpl           # Configuração da Partida
+│   └── ... (user views)
+│
+├── static/             # Arquivos Estáticos
+│   ├── css/                # Estilos separados (game.css, menu.css, etc)
+│   ├── img/pieces/         # SVGs das peças (Cburnett style)
+│   └── audio/              # Efeitos sonoros (move, capture, check, mate)
+│
+└── data/               # Banco de Dados
+    └── users.json          # Persistência dos jogadores e pontuação
 
+    ▶️ Como Executar
+Siga os passos abaixo para rodar o projeto na sua máquina:
 
----
+1. Preparar o Ambiente
+Certifique-se de ter o Python instalado. Abra o terminal na pasta do projeto:
 
-## 📁 Descrição das Pastas
+Bash
 
-### `controllers/`
-Contém as classes responsáveis por lidar com as rotas da aplicação. Exemplos:
-- `user_controller.py`: rotas para listagem, adição, edição e remoção de usuários.
-- `base_controller.py`: classe base com utilitários comuns.
-
-### `models/`
-Define as classes que representam os dados da aplicação. Exemplo:
-- `user.py`: classe `User`, com atributos como `id`, `name`, `email`, etc.
-
-### `services/`
-Responsável por salvar, carregar e manipular dados usando arquivos JSON. Exemplo:
-- `user_service.py`: contém métodos como `get_all`, `add_user`, `delete_user`.
-
-### `views/`
-Contém os arquivos `.tpl` utilizados pelo Bottle como páginas HTML:
-- `layout.tpl`: estrutura base com navegação e bloco `content`.
-- `users.tpl`: lista os usuários.
-- `user_form.tpl`: formulário para adicionar/editar usuário.
-
-### `static/`
-Arquivos estáticos como:
-- `css/style.css`: estilos básicos.
-- `js/main.js`: scripts JS opcionais.
-- `img/BottleLogo.png`: exemplo de imagem.
-
-### `data/`
-Armazena os arquivos `.json` que simulam o banco de dados:
-- `users.json`: onde os dados dos usuários são persistidos.
-
----
-
-## ▶️ Como Executar
-
-1. Crie o ambiente virtual na pasta fora do seu projeto:
-```bash
+# Cria o ambiente virtual (Recomendado)
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\\Scripts\\activate     # Windows
-```
 
-2. Entre dentro do seu projeto criado a partir do template e instale as dependências:
-```bash
+# Ativa o ambiente
+# Windows:
+venv\Scripts\activate
+# Linux/Mac:
+source venv/bin/activate
+2. Instalar Dependências
+Bash
+
 pip install -r requirements.txt
-```
+3. Rodar o Servidor
+Bash
 
-3. Rode a aplicação:
-```bash
 python main.py
-```
+4. Jogar
+Abra seu navegador e acesse: http://localhost:8080
 
-4. Accese sua aplicação no navegador em: [http://localhost:8080](http://localhost:8080)
+🎮 Guia Rápido de Uso
+Cadastro: No menu principal, vá em "Jogadores" -> "Novo Jogador" para criar seu perfil. Anote seu ID.
 
----
+Ranking: Cadastre um segundo jogador para ter um oponente.
 
-## ✍️ Personalização
-Para adicionar novos modelos (ex: Atividades):
+Partida: Volte ao Menu, clique em "Iniciar Jogo", selecione "Modo Rankeado" e insira os IDs das Brancas e das Pretas.
 
-1. Crie a classe no diretório **models/**.
+Vitória: Ao dar Xeque-Mate, a pontuação será atualizada automaticamente no Ranking.
 
-2. Crie o service correspondente para manipulação do JSON.
+🧠 Autores
+Projeto desenvolvido pelo trio:
 
-3. Crie o controller com as rotas.
+[Seu Nome Aqui] - Front-end, Controllers e Integração.
 
-4. Crie as views .tpl associadas.
+[Nome do Amigo 1] - Back-end (Motor de Xadrez e Lógica das Peças).
 
----
+[Nome do Amigo 2] - Services e Persistência de Dados.
 
-## 🧠 Autor e Licença
-Projeto desenvolvido como template didático para disciplinas de Programação Orientada a Objetos, baseado no [BMVC](https://github.com/hgmachine/bmvc_start_from_this).
-Você pode reutilizar, modificar e compartilhar livremente.
+📄 Licença
+Projeto desenvolvido como template didático baseado no BMVC. Livre para uso educacional e modificações.
