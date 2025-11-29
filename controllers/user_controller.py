@@ -60,8 +60,8 @@ class UserController(BaseController):
         if request.method == 'POST':
             self.user_service.edit_user(user)
             return self.redirect(f'/profile/{user_id}')
-
-        games = self.game_service.get_games_by_player(user.name)
+        
+        games = self.game_service.get_games_by_player(user.id)
         
         return self.render('profile', user=user, games=games)
 
