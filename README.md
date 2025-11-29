@@ -34,6 +34,7 @@ xadrez-poo-bottle/
 ├── app.py              # Configuração das rotas e apps do Bottle
 ├── main.py             # Ponto de entrada (Roda o servidor)
 ├── config.py           # Configurações globais
+├── seed.py             # Instancia objetos de teste no banco de dados
 ├── requirements.txt    # Dependências (bottle, etc)
 │
 ├── controllers/        # A "Cola" do sistema
@@ -49,7 +50,8 @@ xadrez-poo-bottle/
 │   └── ... (pawn.py, king.py, etc)
 │
 ├── services/           # Persistência de Dados
-│   └── user_service.py     # Salva usuários e atualiza pontuação no JSON
+│   ├── user_service.py     # Salva usuários e atualiza pontuação no Banco de Dados
+│   └── game_service.py     # Salva e atualiza jogos no Banco de Dados
 │
 ├── views/              # Front-end (HTML + Bottle Templates)
 │   ├── layout.tpl          # Base HTML (Cabeçalho/Rodapé)
@@ -65,7 +67,7 @@ xadrez-poo-bottle/
 │   └── audio/              # Efeitos sonoros (move, capture, check, mate)
 │
 └── data/               # Banco de Dados
-    └── users.json          # Persistência dos jogadores e pontuação
+    └── chess_system.db         # Persistência dos jogadores e pontuação
 
     ▶️ Como Executar
 Siga os passos abaixo para rodar o projeto na sua máquina:
@@ -87,11 +89,18 @@ source venv/bin/activate
 Bash
 
 pip install -r requirements.txt
-3. Rodar o Servidor
+
+5. Adicionar instâncias teste
+Bash
+
+python seed.py
+
+5. Rodar o Servidor
 Bash
 
 python main.py
-4. Jogar
+
+6. Jogar
 Abra seu navegador e acesse: http://localhost:8080
 
 🎮 Guia Rápido de Uso
