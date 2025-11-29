@@ -69,7 +69,7 @@
 
 <div class="ranking-container">
     <h1>🏆 Hall da Fama</h1>
-    <p>Os melhores estrategistas do servidor.</p>
+    <p>Os melhores enxadristas do servidor.</p>
 
     <table class="tabela-ranking">
         <thead>

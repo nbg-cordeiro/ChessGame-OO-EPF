@@ -14,6 +14,9 @@ class GameController(BaseController):
         self.game_model = GameModel()
         self.user_service = UserService()
         self.setup_routes()
+        self.p1_id = None 
+        self.p2_id = None 
+        self.is_ranked = False
         # Memória temporária da partida atual
         self.temp_game = {
             'active': False,
@@ -96,9 +99,23 @@ class GameController(BaseController):
     #tabuleiro
 
     def index(self):
-        board_matrix = self.game.board.to_matrix()
-        return self.render('tabuleiro', board=board_matrix)
+        nome_p1 = "Jogador 1 (Brancas)"
+        nome_p2 = "Jogador 2 (Pretas)"
 
+        if self.is_ranked:
+            u1 = self.user_service.get_by_id(self.p1_id)
+            u2 = self.user_service.get_by_id(self.p2_id)
+            
+            if u1: nome_p1 = f"{u1.name} (Ranking: {u1.score})"
+            if u2: nome_p2 = f"{u2.name} (Ranking: {u2.score})"
+
+        board_matrix = self.game.board.to_matrix()
+        
+        return self.render('tabuleiro', 
+                           board=board_matrix, 
+                           player1=nome_p1, 
+                           player2=nome_p2)
+        
     def move_piece(self):
         data = request.json
         start_pos = data.get('start')
