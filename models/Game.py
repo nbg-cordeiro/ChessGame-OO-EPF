@@ -1,5 +1,6 @@
 import copy
 from models.BoardInitialize import Board
+from models.piece import Piece
 from models.pawn import Pawn
 from models.queen import Queen
 from models.rook import Rook
@@ -13,6 +14,7 @@ class Game:
         self.board = Board()    
         self.turn = 'white'
         self.jogadas = 0
+        self.ultimaJogada = None
         
 
     def getPiece(self, position):
@@ -42,9 +44,6 @@ class Game:
         return False
     
     def try_move(self, start, end):
-        """Tenta realizar uma jogada e retorna JSON baseado no BOAS práticas do Bottle"""
-
-        # 1. Validar formato
         if len(start) != 2 or len(end) != 2:
             return {"valid": False, "error": "Invalid input format"}
 
@@ -54,72 +53,99 @@ class Game:
             return {"valid": False, "error": "No piece at start position"}
 
         if piece.color != self.turn:
-            return {"valid": False, "error": "Not your piece"}
-        
+            return {"valid": False, "error": "Não é a sua vez!"}
+
         target_piece = self.getPiece(end)
 
-        # 2. Simular jogada
+        # En Passant
+        if isinstance(piece, Pawn):
+            if self.enPassant(piece, start, end):
+                temp_board = copy.deepcopy(self.board)
+                lastMove = self.ultimaJogada
+                startInim = lastMove["start"]
+                endInim = lastMove["end"]
+
+                colEndInim = ord(endInim[0]) - ord('a')
+                LinhaEndInimigo = 8 - int(endInim[1])
+
+                temp_board.game[LinhaEndInimigo][colEndInim] = None
+                self.setPieceOn(temp_board, end, piece)
+                self.setPieceOn(temp_board, start, None)
+
+                if self.isKingInCheck(temp_board, self.turn):
+                    return {"valid": False, "error": "Rei em cheque!"}
+
+                self.board.game[LinhaEndInimigo][colEndInim] = None
+                self.setPiece(end, piece)
+                self.setPiece(start, None)
+
+                self.ultimaJogada = {
+                    "piece": piece,
+                    "start": start,
+                    "end": end
+                }
+
+                enemy_color = "black" if self.turn == "white" else "white"
+                self.turn = enemy_color
+
+                return {
+                    "valid": True,
+                    "check": self.isKingInCheck(self.board, enemy_color),
+                    "turn": self.turn,
+                    "board": self.board.to_matrix() if hasattr(self.board, "to_matrix") else None,
+                    "mate": self.is_checkmate(self.turn),
+                    "empate": self.is_draw(),
+                    "afogamento": self.afogamento(self.turn),
+                }
+
         temp_board = copy.deepcopy(self.board)
         self.setPieceOn(temp_board, end, piece)
         self.setPieceOn(temp_board, start, None)
 
         if self.isKingInCheck(temp_board, self.turn):
-            return {"valid": False, "error": "Illegal move: King would be in check"}
+            return {"valid": False, "error": "Rei em cheque!"}
 
-        # 3. Executar jogada real
         if not piece.makeMoves(start, end, self.board):
-            return {"valid": False, "error": "Invalid move for this piece"}
+            return {"valid": False, "error": "Movimento inválido."}
 
-        if isinstance(piece,Pawn) or target_piece is not None:
+        self.ultimaJogada = {
+            "piece": piece,
+            "start": start,
+            "end": end
+        }
 
+
+        if isinstance(piece, Pawn) or target_piece is not None:
             self.jogadas = 0
-
         else:
+            self.jogadas += 1
 
-            self.jogadas+=1
-
-        # 4. Checar se deu cheque no inimigo
         enemy_color = "black" if self.turn == "white" else "white"
         in_check = self.isKingInCheck(self.board, enemy_color)
 
-        # 5. Trocar turno
         self.turn = enemy_color
-        
-        #verficacao_mate(daniel)
+
         is_mate = self.is_checkmate(self.turn)
-
         empate = self.is_draw()
-
         afogamento = self.afogamento(self.turn)
 
-        # 6. Retornar resultado
         return {
             "valid": True,
             "check": in_check,
             "turn": self.turn,
             "board": self.board.to_matrix() if hasattr(self.board, "to_matrix") else None,
-            
-            #verificacao_mate(daniel)
             "mate": is_mate,
-
-            #verificacao empate 67(Eduardo)
             "empate": empate,
-
-            #verificacao aforamento (eduardo)
-
             "afogamento": afogamento,
-
         }
 
-    # método auxiliar para mexer peças no board temporário
+
     def setPieceOn(self, board, position, piece):
 
         col = ord(position[0]) - ord('a')
         row = 8 - int(position[1])
         board.game[row][col] = piece
 
-
-    #metodos para mate (daniel)
     
     def idx_to_notation(self, row, col):
 
@@ -164,12 +190,10 @@ class Game:
         return True
     
     def afogamento(self, color):
-
-        #Se o rei ta em cheque, NÃO é afogamento
+        
         if self.isKingInCheck(self.board, color):
             return False
-
-        #Tentar achar qualquer jogada legal
+        
         for r_start in range(8):
             for c_start in range(8):
                 piece = self.board.game[r_start][c_start]
@@ -194,20 +218,17 @@ class Game:
                                 valid_geom = False
 
                             if valid_geom:
-                                # Se a jogada existe E não deixa o rei em cheque → não é afogamento
+                                # Se a jogada existe E não deixa o rei em cheque -> não é afogamento
                                 if not self.isKingInCheck(temp_board, color):
                                     return False
 
-        #Sem cheque + sem jogadas legais = AFOGAMENTO
+        #Sem cheque e sem jogadas legais = AFOGAMENTO
         return True
     
     def is_draw(self):
-    # Deu 50 jogadas
-    
         if self.jogadas >= 50:
             return True
 
-        # só tem rei
         pieces = []
 
         for row in self.board.game:
@@ -215,13 +236,68 @@ class Game:
                 if p is not None:
                     pieces.append(p)
 
-        # Apenas dois reis no tabuleiro
         if len(pieces) == 2:
             if isinstance(pieces[0], King) and isinstance(pieces[1], King):
                 return True
 
         return False
+    
+    def enPassant(self, piece, start, end):
+
+        if not isinstance(piece, Pawn):
+
+            return False
+
+        if self.ultimaJogada is None:
+
+            return False
+
+        lastMove = self.ultimaJogada
+        pecaInimiga = lastMove["piece"]
+
+        if not isinstance(pecaInimiga, Pawn):
+            return False
+
+        if pecaInimiga.color == piece.color:
+            return False
+
+        startInim = lastMove["start"]
+        endInim = lastMove["end"]
+
+        colStartInim = ord(startInim[0]) - ord('a')
+        LinhaStartInimigo = 8 - int(startInim[1])
+
+        colEndInim = ord(endInim[0]) - ord('a')
+        LinhaEndInimigo = 8 - int(endInim[1])
+
+        if abs(LinhaStartInimigo - LinhaEndInimigo) != 2:
+            return False
+
+        colunaMeuPeaoStart = ord(start[0]) - ord('a')
+        linhaMeuPeaoStart = 8 - int(start[1])
+
+        colunaMeuPeaoEnd = ord(end[0]) - ord('a')
+        linhaMeuPeaoEnd = 8 - int(end[1])
+
+        if abs(colunaMeuPeaoStart - colunaMeuPeaoEnd) != 1:
+            return False
 
 
-  
-        
+        if piece.color == "white":
+            if linhaMeuPeaoEnd != linhaMeuPeaoStart - 1:
+                return False
+        else:
+            if linhaMeuPeaoEnd != linhaMeuPeaoStart + 1:
+                return False
+        if linhaMeuPeaoStart != LinhaEndInimigo:
+            return False
+
+        if abs(colunaMeuPeaoStart - colEndInim) != 1:
+            return False
+
+        self.board.game[LinhaEndInimigo][colEndInim] = None
+
+        self.setPiece(end, piece)
+        self.setPiece(start, None)
+
+        return True

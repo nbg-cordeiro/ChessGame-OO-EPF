@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass
-from models import database
+from . import database
 
 @dataclass
 class GameData:

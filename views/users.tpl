@@ -1,12 +1,7 @@
 % rebase('layout', title='Jogadores')
 
-<!-- Link para o CSS Externo -->
 <link rel="stylesheet" href="/static/css/users.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<a href="/" class="btn-home">
-    <i class="fas fa-home"></i> Página Inicial
-</a>
 
 <section class="users-section">
     <div class="section-header">
@@ -45,4 +40,11 @@
             </tbody>
         </table>
     </div>
+
+    <div style="margin-top: 30px; text-align: center;">
+        <a href="/menu" class="btn btn-primary">
+            <i class="fas fa-arrow-left"></i> Voltar ao Menu
+        </a>
+    </div>
+
 </section>
