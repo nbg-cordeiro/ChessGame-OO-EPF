@@ -1,150 +1,179 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f6f8; 
-    color: #333;
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    width: 100vw;
-    overflow-x: hidden; 
-}
-
-.container {
+/* Layout Principal (Dashboard Grid) */
+.profile-wrapper {
     display: flex;
     justify-content: center;
-    align-items: center;
+    padding: 40px 20px;
     min-height: 100vh;
-    padding: 20px;
     box-sizing: border-box;
 }
 
-.form-card {
-    background-color: #ffffff;
+.profile-container {
+    display: grid;
+    grid-template-columns: 300px 1fr; /* Sidebar fixa | Conteúdo fluido */
+    gap: 30px;
     width: 100%;
-    max-width: 700px; /* Largura ideal para leitura */
-    padding: 50px 40px;
-    border-radius: 20px; /* Bordas mais arredondadas */
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    max-width: 1200px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- CARTÕES (Sidebar e Conteúdo) --- */
+.profile-card, .content-box {
+    background: var(--white);
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     border: 1px solid #eee;
-    animation: slideUp 0.5s ease-out;
+    padding: 30px;
 }
 
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.form-header {
+/* Sidebar (Esquerda) */
+.profile-card {
     text-align: center;
-    margin-bottom: 40px;
-    border-bottom: 2px solid #f4f7f6;
-    padding-bottom: 20px;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.form-title {
-    margin: 0;
-    font-size: 2.2rem; 
-    color: #2c3e50;
+.avatar-large {
+    /* 1. Define o tamanho do círculo */
+    width: 120px;
+    height: 120px;
+
+    /* 2. Transforma em círculo e dá cor de fundo */
+    background-color: #ecf0f1; /* Cinza claro */
+    border-radius: 50%;
+
+    /* 3. Centraliza o ícone usando Flexbox */
+    display: flex;
+    justify-content: center; /* Horizontal */
+    align-items: center;     /* Vertical */
+
+    /* 4. Estilo do ícone dentro do círculo */
+    font-size: 5rem;
+    color: #bdc3c7; /* Cor do ícone (um pouco mais escuro que o fundo) */
+    margin-bottom: 15px;
+
+    /* Opcional: Sombra para dar profundidade */
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+    border: 3px solid #fff; /* Borda branca para destacar do fundo do card */
+}
+
+.profile-name {
+    margin: 10px 0 5px 0;
+    color: var(--text-color);
+    font-size: 1.6rem;
     font-weight: 800;
-    letter-spacing: -0.5px;
 }
 
-.form-title i { margin-right: 10px; color: #34495e; }
-
-.form-subtitle {
-    margin-top: 10px;
+.profile-id {
     color: #95a5a6;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    background-color: #f8f9fa;
+    padding: 5px 15px;
+    border-radius: 20px;
+    display: inline-block;
 }
 
-/* Grid do Formulário */
+/* Conteúdo (Direita) */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+h2.box-title {
+    font-size: 1.4rem;
+    color: var(--text-color);
+    border-bottom: 2px solid #f4f7f6;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+}
+
+h2.box-title i { color: var(--secondary-color); }
+
+/* --- FORMULÁRIO --- */
 .form-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; 
-    gap: 25px;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
 }
 
-.form-group { margin-bottom: 5px; }
+.form-group { margin-bottom: 15px; }
 .full-width { grid-column: 1 / -1; }
 
 label {
     display: block;
-    margin-bottom: 8px;
     font-weight: 700;
     color: #555;
-    font-size: 0.95rem;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="date"] {
+input[type="text"], input[type="email"], input[type="date"] {
     width: 100%;
-    padding: 14px 15px;
+    padding: 12px 15px;
     border: 1px solid #ddd;
-    border-radius: 10px;
+    border-radius: 8px;
     font-size: 1rem;
-    color: #333;
-    background-color: #fdfdfd;
     box-sizing: border-box;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+    color: var(--text-color);
 }
 
 input:focus {
-    border-color: #009879;
+    border-color: var(--primary-color);
     outline: none;
-    background-color: #fff;
-    box-shadow: 0 0 0 4px rgba(0, 152, 121, 0.1);
+    box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
 }
 
-.form-actions {
-    display: flex;
-    gap: 20px;
-    margin-top: 40px;
+/* --- TABELA DE HISTÓRICO --- */
+.table-responsive { overflow-x: auto; }
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    min-width: 500px;
 }
 
-.btn {
-    flex: 1;
-    padding: 16px; 
-    border: none;
-    border-radius: 10px;
-    font-size: 1.1rem;
+.styled-table th {
+    background-color: #f8f9fa;
+    color: #444;
+    padding: 15px;
+    text-align: left;
     font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-bottom: 2px solid #eee;
 }
 
-.btn-save {
-    background-color: #009879;
-    color: white;
+.styled-table td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    color: #555;
 }
 
-.btn-save:hover {
-    background-color: #007f65;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 152, 121, 0.25);
-}
+.styled-table tr:last-child td { border-bottom: none; }
 
+/* Badges (Etiquetas) */
+.badge { padding: 6px 12px; border-radius: 30px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+.badge-win { background-color: #d4edda; color: #155724; }
+.badge-loss { background-color: #f8d7da; color: #721c24; }
+.badge-active { background-color: #cce5ff; color: #004085; }
+.badge-finished { background-color: #e2e3e5; color: #383d41; }
 
-.btn-cancel {
-    background-color: #7f8c8d;
-    color: white;
-    border: none; 
-}
-
-.btn-cancel:hover {
-    background-color: #616e6e;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-}
-
-@media (max-width: 650px) {
+/* Responsividade */
+@media (max-width: 850px) {
+    .profile-container { grid-template-columns: 1fr; }
     .form-grid { grid-template-columns: 1fr; }
-    .form-actions { flex-direction: column; }
-    .form-card { padding: 30px 20px; }
+    .profile-card { position: static; margin-bottom: 20px; }
 }

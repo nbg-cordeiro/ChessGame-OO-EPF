@@ -1,121 +1,22 @@
-body {
-    margin: 0;
-    background-color: #f4f6f8; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.menu-wrapper {
+.center-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; 
-    width: 100%;
+    height: 100vh;
     padding: 20px;
-    box-sizing: border-box;
 }
 
-.conteiner-menu {
-    background-color: white;
+.menu-card {
+    max-width: 550px;
     width: 100%;
-    max-width: 550px; 
-    padding: 60px 40px; 
-    
-    border-radius: 20px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.1); 
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 25px; 
-    border: 1px solid #eee;
-    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    gap: 20px; 
+    text-align: center;
 }
 
-@keyframes popIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-.titulo-jogo {
-    font-size: 3.2rem;
-    color: #2c3e50;
+.titulo-menu {
+    font-size: 3.5rem;
     margin-bottom: 30px;
     font-weight: 800;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    letter-spacing: -1px;
-}
-
-.titulo-jogo i {
-    color: #485460;
-    font-size: 1.1em;
-}
-
-.botao-menu {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%; 
-    padding: 18px; 
-    text-decoration: none;
-    font-size: 1.4rem; 
-    font-weight: bold;
-    border-radius: 12px;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    border: none;
-    box-sizing: border-box; 
-}
-
-.botao-menu i {
-    margin-right: 12px;
-    font-size: 1.3em;
-}
-
-.btn-iniciar_jogo {
-    background-color: #27ae60;
-    color: white;
-}
-.btn-iniciar_jogo:hover {
-    background-color: #219150;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(39, 174, 96, 0.3);
-}
-
-.btn-jogadores {
-    background-color: #2980b9;
-    color: white;
-}
-.btn-jogadores:hover {
-    background-color: #2472a4;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(41, 128, 185, 0.3);
-}
-
-.btn-ranking {
-    background-color: #f39c12;
-    color: white;
-}
-.btn-ranking:hover {
-    background-color: #d35400;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(243, 156, 18, 0.3);
-}
-
-.rodape-menu {
-    margin-top: 25px;
-    color: #7f8c8d;
-    font-size: 1rem;
-}
-
-.rodape-menu a {
-    color: #8e44ad; 
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.rodape-menu a:hover {
-    text-decoration: underline;
 }

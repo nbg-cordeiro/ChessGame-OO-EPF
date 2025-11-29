@@ -1,63 +1,126 @@
-.ranking-container {
-    max-width: 800px;
-    margin: 40px auto;
-    background-color: white;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    padding: 30px;
-    text-align: center;
+/* Layout Principal Centralizado */
+.ranking-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
-h1 { color: #2c3e50; font-size: 2.5em; margin-bottom: 20px; }
+/* O Cartão do Ranking */
+.ranking-card {
+    background-color: var(--white);
+    width: 100%;
+    max-width: 800px; /* Largura boa para tabelas */
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border: 1px solid #eee;
+    height: fit-content;
+    text-align: center;
+    animation: slideUp 0.5s ease-out;
+}
 
-.tabela-ranking {
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Título */
+.ranking-title {
+    font-size: 2.2rem;
+    color: var(--text-color);
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.ranking-subtitle {
+    color: #95a5a6;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+/* --- TABELA --- */
+.table-responsive {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
+.ranking-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    min-width: 500px; /* Garante que não esmague em mobile */
 }
 
-.tabela-ranking th {
-    background-color: #2c3e50;
-    color: white;
+.ranking-table th {
+    background-color: #f8f9fa;
+    color: #555;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
     padding: 15px;
-    font-size: 1.1em;
+    letter-spacing: 0.5px;
 }
 
-.tabela-ranking td {
+.ranking-table td {
     padding: 15px;
     border-bottom: 1px solid #eee;
-    font-size: 1.1em;
-    color: #333;
+    color: var(--text-color);
+    font-size: 1.1rem;
+    vertical-align: middle;
 }
 
-.pos-1 { background-color: #fff9c4; font-weight: bold; } 
-.pos-1 .medalha { color: #f1c40f; } 
-.pos-2 { background-color: #f5f5f5; font-weight: bold; } 
-.pos-2 .medalha { color: #95a5a6; }
-.pos-3 { background-color: #ffe0b2; font-weight: bold; } 
-.pos-3 .medalha { color: #d35400; } 
+.ranking-table tr:last-child td { border-bottom: none; }
 
-.avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #ddd;
-    display: inline-flex;
+/* Linhas dos Campeões (Cores de Fundo Sutis) */
+.row-1 { background-color: #fffde7; } /* Ouro muito claro */
+.row-2 { background-color: #f5f5f5; } /* Prata muito claro */
+.row-3 { background-color: #fff3e0; } /* Bronze muito claro */
+
+/* Medalhas e Posições */
+.rank-pos { font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+.gold { color: #f1c40f; font-size: 1.4rem; filter: drop-shadow(0 2px 2px rgba(241, 196, 15, 0.3)); }
+.silver { color: #95a5a6; font-size: 1.3rem; }
+.bronze { color: #d35400; font-size: 1.3rem; }
+.normal-pos { color: #bdc3c7; font-size: 1rem; }
+
+/* Avatar na Tabela */
+.player-cell {
+    display: flex;
     align-items: center;
-    justify-content: center;
-    margin-right: 10px;
-    font-size: 0.8em;
-    color: #555;
+    gap: 15px;
+    font-weight: 600;
+    text-align: left;
 }
 
-.btn-voltar {
-    display: inline-block;
-    margin-top: 30px;
-    padding: 10px 25px;
-    background-color: #7f8c8d;
-    color: white;
-    text-decoration: none;
-    border-radius: 20px;
-    transition: background 0.3s;
+.avatar-small {
+    width: 35px;
+    height: 35px;
+    background-color: #ecf0f1;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-.btn-voltar:hover { background-color: #95a5a6; }
+
+.score-cell {
+    font-weight: 800;
+    color: var(--primary-color);
+    font-family: monospace; /* Fonte de números */
+    font-size: 1.2rem;
+}
+
+/* Link Vazio */
+.empty-state {
+    padding: 40px;
+    color: #95a5a6;
+}
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    display: block;
+    opacity: 0.3;
+}

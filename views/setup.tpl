@@ -1,45 +1,60 @@
+% rebase('layout.tpl', title='Configuração da Partida')
+
 <link rel="stylesheet" href="/static/css/setup.css">
 
-<div class="setup-container">
-    <div class="caixa-config">
-        <h2><i class="fas fa-cog"></i> Configuração da Partida</h2>
+<div class="setup-wrapper">
+    <div class="config-card">
+        
+        <h1 class="config-title">
+            <i class="fas fa-cog" style="color: var(--text-color);"></i> Configuração
+        </h1>
+        
+        % if defined('error') and error:
+            <div class="alert-box">
+                <i class="fas fa-exclamation-triangle"></i> {{error}}
+            </div>
+        % end
         
         <form action="/game/start" method="POST">
             
-            <div class="selecao-modo">
-                <label class="opcao-radio">
+            <div class="mode-selector">
+                <label class="radio-label">
                     <input type="radio" id="modo-casual" name="mode" value="casual" checked onchange="alternarCampos()">
                     Modo Casual
                 </label>
                 
-                <label class="opcao-radio">
+                <label class="radio-label">
                     <input type="radio" id="modo-rankeado" name="mode" value="ranked" onchange="alternarCampos()">
                     Modo Rankeado
                 </label>
             </div>
             
-            <div id="campos-rankeado" class="area-jogadores">
-                <div style="font-size: 0.9em; margin-bottom: 10px; color: #f57f17;">
-                    <i class="fas fa-info-circle"></i> Insira o ID dos jogadores cadastrados.
+            <div id="campos-rankeado" class="inputs-area">
+                <div class="info-text">
+                    <i class="fas fa-info-circle"></i> Digite o ID dos jogadores cadastrados.
                 </div>
 
-                <div class="grupo-input">
-                    <label for="p1">🆔 ID Jogador 1 (Brancas):</label>
+                <div class="input-group">
+                    <label for="p1">🆔 Jogador 1 (Brancas):</label>
                     <input type="number" id="p1" name="player1_id" placeholder="Ex: 1">
                 </div>
                 
-                <div class="grupo-input">
-                    <label for="p2">🆔 ID Jogador 2 (Pretas):</label>
+                <div class="input-group">
+                    <label for="p2">🆔 Jogador 2 (Pretas):</label>
                     <input type="number" id="p2" name="player2_id" placeholder="Ex: 2">
                 </div>
             </div>
             
-            <button type="submit" class="btn-iniciar">
-                <i class="fas fa-play"></i> Começar Jogo
-            </button>
-            <a href="/menu" class="btn-voltar-menu">
-                 <i class="fas fa-arrow-left"></i> Voltar ao Menu Principal
-            </a>
+            <div class="actions">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-play"></i> Começar Jogo
+                </button>
+
+                <a href="/menu" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Voltar ao Menu
+                </a>
+            </div>
+
         </form>
     </div>
 </div>
@@ -53,12 +68,10 @@
         
         if (isRankeado) {
             divCampos.style.display = 'flex';
-            inputP1.required = true;
-            inputP2.required = true;
+            inputP1.required = false; 
+            inputP2.required = false;
         } else {
             divCampos.style.display = 'none';
-            inputP1.required = false;
-            inputP2.required = false;
             inputP1.value = "";
             inputP2.value = "";
         }
