@@ -14,6 +14,11 @@ class UserService:
     def save(self):
         # Não calculamos mais ID. Passamos 0 ou None.
         name = request.forms.get('name')
+        try:
+            if name:
+                name = name.encode('latin-1').decode('utf-8')
+        except:
+            pass
         email = request.forms.get('email')
         birthdate = request.forms.get('birthdate')
 
@@ -28,6 +33,11 @@ class UserService:
 
     def edit_user(self, user):
         name = request.forms.get('name')
+        try:
+            if name:
+                name = name.encode('latin-1').decode('utf-8')
+        except:
+            pass
         email = request.forms.get('email')
         birthdate = request.forms.get('birthdate')
 
