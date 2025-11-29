@@ -20,9 +20,8 @@ class GameService:
         return False
     
     def get_games_by_player(self, player_id):
-        """Busca histórico de partidas pelo id do jogador"""
         all_games = self.model.get_all()
-        
+    
         my_games = [
             g for g in all_games 
             if g.player1 == player_id or g.player2 == player_id

@@ -37,8 +37,6 @@ class GameData:
         )
 
 class GameModel:
-    """Responsável apenas por ler e escrever no JSON"""
-    
     def get_all(self):
         if not os.path.exists(FILE_PATH):
             return []
@@ -60,7 +58,6 @@ class GameModel:
         return next((g for g in games if g.id == game_id), None)
 
     def save_game(self, game_data):
-        """Salva ou Atualiza um jogo"""
         games = self.get_all()
         
         for i, g in enumerate(games):
@@ -73,10 +70,7 @@ class GameModel:
         self.save_all(games)
 
     def save_finished_game(self, player1_id, player2_id, moves, winner_id, status):
-        """Calcula ID, cria objeto e salva o jogo finalizado"""
         games = self.get_all()
-        
-        # Gera ID automático
         if not games:
             new_id = 1
         else:

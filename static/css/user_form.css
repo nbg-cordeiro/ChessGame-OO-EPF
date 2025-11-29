@@ -1,84 +1,77 @@
-/* --- KILL SWITCH (Performance) --- */
-* { transition: none !important; animation: none !important; }
-
-/* --- Configuração Geral --- */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f7f6;
+    background-color: #f4f6f8; 
     color: #333;
     margin: 0;
-    padding: 0; /* Remove padding do body para o layout full-height funcionar */
-    
-    /* CORREÇÃO DO RODAPÉ: */
-    display: flex;
-    flex-direction: column; /* Coloca os elementos um embaixo do outro */
-    min-height: 100vh;      /* Ocupa a altura total da tela */
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow-x: hidden; 
 }
 
-/* O container do layout.tpl agora ocupa o espaço que sobrar */
 .container {
-    flex: 1; 
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    min-height: 100vh;
     padding: 20px;
     box-sizing: border-box;
 }
 
-/* --- Cartão do Formulário (Maior) --- */
 .form-card {
     background-color: #ffffff;
     width: 100%;
-    max-width: 800px; /* AUMENTADO: De 500px para 800px */
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-    border: 1px solid #eaeaea;
+    max-width: 700px; /* Largura ideal para leitura */
+    padding: 50px 40px;
+    border-radius: 20px; /* Bordas mais arredondadas */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    border: 1px solid #eee;
+    animation: slideUp 0.5s ease-out;
 }
 
-/* --- Cabeçalho --- */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .form-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
     border-bottom: 2px solid #f4f7f6;
     padding-bottom: 20px;
 }
 
 .form-title {
     margin: 0;
-    font-size: 2rem; /* Título levemente maior */
+    font-size: 2.2rem; 
     color: #2c3e50;
-    font-weight: 700;
+    font-weight: 800;
+    letter-spacing: -0.5px;
 }
+
+.form-title i { margin-right: 10px; color: #34495e; }
 
 .form-subtitle {
-    margin-top: 5px;
+    margin-top: 10px;
     color: #95a5a6;
-    font-size: 1rem;
+    font-size: 1.1rem;
 }
 
-/* --- Grid de Campos (Novo) --- */
+/* Grid do Formulário */
 .form-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Duas colunas iguais */
-    gap: 20px;
+    grid-template-columns: 1fr 1fr; 
+    gap: 25px;
 }
 
-.form-group {
-    margin-bottom: 20px;
-}
-
-/* Faz o campo ocupar a linha inteira se necessário (ex: Email) */
-.full-width {
-    grid-column: 1 / -1;
-}
+.form-group { margin-bottom: 5px; }
+.full-width { grid-column: 1 / -1; }
 
 label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 600;
-    color: #444;
+    font-weight: 700;
+    color: #555;
     font-size: 0.95rem;
 }
 
@@ -86,69 +79,72 @@ input[type="text"],
 input[type="email"],
 input[type="date"] {
     width: 100%;
-    padding: 12px 15px;
+    padding: 14px 15px;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 1rem;
     color: #333;
     background-color: #fdfdfd;
     box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 input:focus {
     border-color: #009879;
     outline: none;
     background-color: #fff;
-    box-shadow: 0 0 0 3px rgba(0, 152, 121, 0.1);
+    box-shadow: 0 0 0 4px rgba(0, 152, 121, 0.1);
 }
 
-/* --- Botões de Ação --- */
 .form-actions {
     display: flex;
-    gap: 15px;
-    margin-top: 30px;
+    gap: 20px;
+    margin-top: 40px;
 }
 
 .btn {
     flex: 1;
-    padding: 15px; /* Botões mais altos */
+    padding: 16px; 
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .btn-save {
     background-color: #009879;
     color: white;
-    box-shadow: 0 4px 6px rgba(0, 152, 121, 0.2);
 }
 
 .btn-save:hover {
     background-color: #007f65;
     transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 152, 121, 0.25);
 }
 
+
 .btn-cancel {
-    background-color: #ecf0f1;
-    color: #7f8c8d;
-    border: 1px solid #dcdcdc;
+    background-color: #7f8c8d;
+    color: white;
+    border: none; 
 }
 
 .btn-cancel:hover {
-    background-color: #dfe6e9;
-    color: #2c3e50;
+    background-color: #616e6e;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
-/* Ajuste Responsivo para Mobile */
-@media (max-width: 600px) {
-    .form-grid {
-        grid-template-columns: 1fr; /* Volta para 1 coluna no celular */
-    }
+@media (max-width: 650px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-actions { flex-direction: column; }
+    .form-card { padding: 30px 20px; }
 }

@@ -17,7 +17,6 @@ class GameController(BaseController):
         self.p1_id = None 
         self.p2_id = None 
         self.is_ranked = False
-        # Memória temporária da partida atual
         self.temp_game = {
             'active': False,
             'p1': None,
@@ -45,15 +44,11 @@ class GameController(BaseController):
 
     def start_game(self):
         modo = request.forms.get('mode')
-        
-        # Reinicia jogo e limpa memória temporária
         self.game = Game()
         self.temp_game = {'active': False, 'p1': None, 'p2': None, 'moves': []}
-
         if modo == 'ranked':
             id_p1 = request.forms.get('player1_id')
             id_p2 = request.forms.get('player2_id')
-            
             try:
                 p1_int = int(id_p1)
                 p2_int = int(id_p2)
@@ -63,8 +58,7 @@ class GameController(BaseController):
                 
                 if not jogador1 or not jogador2:
                     return f"ERRO: ID inválido! O jogador {id_p1} ou {id_p2} não existe."
-                
-                # Ativa modo rankeado na memória
+        
                 self.temp_game['active'] = True
                 self.temp_game['p1'] = p1_int
                 self.temp_game['p2'] = p2_int
@@ -96,8 +90,8 @@ class GameController(BaseController):
             print(f"Erro ao gerar ranking: {erro}")
             return f"Não foi possível carregar o ranking: {str(erro)}"
         
-    #tabuleiro
-
+        
+        
     def index(self):
         nome_p1 = "Jogador 1 (Brancas)"
         nome_p2 = "Jogador 2 (Pretas)"
@@ -126,17 +120,13 @@ class GameController(BaseController):
         resultado = self.game.try_move(start_pos, end_pos)
         
         if resultado['valid'] and self.temp_game['active']:
-            # 1. Guarda movimento na memória
             self.temp_game['moves'].append(f"{start_pos}-{end_pos}")
-
-            # 2. Verifica se o jogo acabou para salvar
             game_over = False
             winner = None
             status = 'over'
 
             if resultado.get('mate'):
                 game_over = True
-                # Quem jogou (vez anterior) venceu
                 winner_color = 'white' if resultado['turn'] == 'black' else 'black'
                 winner = self.temp_game['p1'] if winner_color == 'white' else self.temp_game['p2']
             
@@ -154,7 +144,7 @@ class GameController(BaseController):
                     winner,
                     status
                 )
-                self.temp_game['active'] = False # Para de gravar
+                self.temp_game['active'] = False 
 
         response.content_type = 'application/json'
         return json.dumps(resultado)
