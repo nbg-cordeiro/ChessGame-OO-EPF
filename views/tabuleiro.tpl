@@ -134,7 +134,7 @@
                     statusCard.style.backgroundColor = "#d35400"; 
                 } else if (houveCaptura) {
                     playSound(sndCapture);
-                } else if (data.stalemate || data.draw) {
+                } else if (data.empate || data.afogamento) {
                     playSound(sndMate); 
                     msg = "EMPATE!";
                     statusCard.style.backgroundColor = "#7f8c8d"; 
