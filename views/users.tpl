@@ -1,4 +1,4 @@
-% rebase('layout', title='Usuários')
+% rebase('layout', title='Jogadores')
 
 <!-- Link para o CSS Externo -->
 <link rel="stylesheet" href="/static/css/users.css">
@@ -10,9 +10,9 @@
 
 <section class="users-section">
     <div class="section-header">
-        <h1 class="section-title"><i class="fas fa-users"></i> Gestão de Usuários</h1>
+        <h1 class="section-title"><i class="fas fa-users"></i> Jogadores</h1>
         <a href="/users/add" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Novo Usuário
+            <i class="fas fa-plus"></i> Novo Jogador
         </a>
     </div>
 

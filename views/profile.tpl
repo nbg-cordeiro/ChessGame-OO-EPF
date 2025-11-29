@@ -1,4 +1,4 @@
-% rebase('layout', title='Perfil do Usuário')
+% rebase('layout', title='Perfil do Jogador')
 
 <!-- Link para o CSS específico desta página -->
 <link rel="stylesheet" href="/static/css/profile.css">
@@ -79,7 +79,7 @@
                         </thead>
                         <tbody>
                         % for game in games:
-                            % is_p1 = (str(game.player1) == str(user.name))
+                            % is_p1 = (str(game.player1) == str(user.id))
                             % opponent = game.player2 if is_p1 else game.player1
                             % my_color = "Brancas" if is_p1 else "Pretas"
                             
@@ -98,7 +98,7 @@
 
                                 <td>
                                     % if game.winner:
-                                        % if game.winner == user.name:
+                                        % if game.winner == user.id:
                                             <span class="badge badge-win"><i class="fas fa-trophy"></i> Vitória</span>
                                         % else:
                                             <span class="badge badge-loss"><i class="fas fa-times"></i> Derrota</span>
