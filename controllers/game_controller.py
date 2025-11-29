@@ -2,7 +2,7 @@ import json
 from bottle import Bottle, request, response, redirect
 from .base_controller import BaseController
 from models.Game import Game
-from models.game_data import GameModel # Import adicionado
+from models.game_data import GameModel
 from services.user_service import UserService 
 
 class GameController(BaseController):
@@ -10,10 +10,16 @@ class GameController(BaseController):
         super().__init__(app)
         
         self.game = Game()
-        self.game_model = GameModel() # Instancia o Model
+        self.game_model = GameModel()
         self.user_service = UserService()
         
-        self.current_game_id = None # Controla qual jogo está sendo jogado
+        # Memória temporária da partida atual
+        self.temp_game = {
+            'active': False,
+            'p1': None,
+            'p2': None,
+            'moves': []
+        }
         
         self.setup_routes()
 
@@ -35,37 +41,37 @@ class GameController(BaseController):
     def start_game(self):
         modo = request.forms.get('mode')
         
-        # Reseta o jogo local
+        # Reinicia jogo e limpa memória temporária
         self.game = Game()
-        self.current_game_id = None 
+        self.temp_game = {'active': False, 'p1': None, 'p2': None, 'moves': []}
 
         if modo == 'ranked':
             id_p1 = request.forms.get('player1_id')
             id_p2 = request.forms.get('player2_id')
             
             try:
-                # Converte e busca jogadores
-                jogador1 = self.user_service.get_by_id(int(id_p1))
-                jogador2 = self.user_service.get_by_id(int(id_p2))
+                p1_int = int(id_p1)
+                p2_int = int(id_p2)
+                
+                jogador1 = self.user_service.get_by_id(p1_int)
+                jogador2 = self.user_service.get_by_id(p2_int)
                 
                 if not jogador1 or not jogador2:
-                    return f"ERRO: ID inválido! O jogador {id_p1} ou {id_p2} não existe. Cadastre antes de jogar."
+                    return f"ERRO: ID inválido! O jogador {id_p1} ou {id_p2} não existe."
                 
-                # --- CRIA O JOGO NO BANCO ---
-                new_game_data = self.game_model.create_new_game(int(id_p1), int(id_p2))
-                self.current_game_id = new_game_data.id
+                # Ativa modo rankeado na memória
+                self.temp_game['active'] = True
+                self.temp_game['p1'] = p1_int
+                self.temp_game['p2'] = p2_int
                 
-                print(f"Iniciando Jogo Rankeado (ID {self.current_game_id}): {jogador1.name} vs {jogador2.name}")
+                print(f"Iniciando Rankeada (Memória): {jogador1.name} vs {jogador2.name}")
                 
             except ValueError:
                 return "ERRO: Os IDs precisam ser números."
-                
         else:
             print("Iniciando Jogo Casual")
-
+        
         return redirect('/game')
-
-    #tabuleiro
 
     def index(self):
         board_matrix = self.game.board.to_matrix()
@@ -80,28 +86,41 @@ class GameController(BaseController):
 
         resultado = self.game.try_move(start_pos, end_pos)
         
-        if resultado.get('valid') and self.current_game_id:
-            game_data = self.game_model.get_by_id(self.current_game_id)
-            
-            if game_data:
-                move_str = f"{start_pos}-{end_pos}"
-                game_data.moves.append(move_str)
-                
-                if resultado.get('mate'):
-                    game_data.status = "over"
-                    winner_color = 'white' if resultado['turn'] == 'black' else 'black'
-                    game_data.winner = game_data.player1 if winner_color == 'white' else game_data.player2
-                
-                elif resultado.get('afogamento') or resultado.get('empate'):
-                    game_data.status = "draw"
-                    game_data.winner = None
+        if resultado['valid'] and self.temp_game['active']:
+            # 1. Guarda movimento na memória
+            self.temp_game['moves'].append(f"{start_pos}-{end_pos}")
 
-                self.game_model.save_game(game_data)
+            # 2. Verifica se o jogo acabou para salvar
+            game_over = False
+            winner = None
+            status = 'over'
+
+            if resultado.get('mate'):
+                game_over = True
+                # Quem jogou (vez anterior) venceu
+                winner_color = 'white' if resultado['turn'] == 'black' else 'black'
+                winner = self.temp_game['p1'] if winner_color == 'white' else self.temp_game['p2']
+            
+            elif resultado.get('afogamento') or resultado.get('empate'):
+                game_over = True
+                status = 'draw'
+                winner = None
+
+            if game_over:
+                print("Fim de jogo! Salvando no disco...")
+                self.game_model.save_finished_game(
+                    self.temp_game['p1'],
+                    self.temp_game['p2'],
+                    self.temp_game['moves'],
+                    winner,
+                    status
+                )
+                self.temp_game['active'] = False # Para de gravar
 
         response.content_type = 'application/json'
         return json.dumps(resultado)
 
     def reset_game(self):
         self.game = Game()
-        self.current_game_id = None
+        self.temp_game = {'active': False, 'p1': None, 'p2': None, 'moves': []}
         return {"status": "ok"}

@@ -59,11 +59,24 @@ class GameModel:
         games = self.get_all()
         return next((g for g in games if g.id == game_id), None)
 
-    def create_new_game(self, player1_id, player2_id):
-        """Gera ID automático e salva o novo jogo"""
+    def save_game(self, game_data):
+        """Salva ou Atualiza um jogo"""
         games = self.get_all()
         
-        # Lógica do ID Auto-Incremento
+        for i, g in enumerate(games):
+            if g.id == game_data.id:
+                games[i] = game_data
+                self.save_all(games)
+                return
+
+        games.append(game_data)
+        self.save_all(games)
+
+    def save_finished_game(self, player1_id, player2_id, moves, winner_id, status):
+        """Calcula ID, cria objeto e salva o jogo finalizado"""
+        games = self.get_all()
+        
+        # Gera ID automático
         if not games:
             new_id = 1
         else:
@@ -73,26 +86,11 @@ class GameModel:
             id=new_id,
             player1=player1_id,
             player2=player2_id,
-            moves=[],
-            status="active"
+            moves=moves,
+            status=status,
+            winner=winner_id
         )
         
         games.append(new_game)
         self.save_all(games)
-        return new_game
-
-    def save_game(self, game_data):
-        """Salva ou Atualiza um jogo existente"""
-        games = self.get_all()
-        
-        found = False
-        for i, g in enumerate(games):
-            if g.id == game_data.id:
-                games[i] = game_data
-                found = True
-                break
-        
-        if not found:
-            games.append(game_data)
-            
-        self.save_all(games)
+        return new_id
