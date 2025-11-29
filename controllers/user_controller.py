@@ -61,10 +61,15 @@ class UserController(BaseController):
             self.user_service.edit_user(user)
             return self.redirect(f'/profile/{user_id}')
         
-        games = self.game_service.get_games_by_player(user.id)
+        try:
+            games = self.game_service.get_games_by_player(user.id)
+        except:
+            games = []
         
-        return self.render('profile', user=user, games=games)
-
+        return self.render('profile', 
+                           user=user, 
+                           games=games, 
+                           action=f'/users/edit/{user_id}')
 
 user_routes = Bottle()
 user_controller = UserController(user_routes)
