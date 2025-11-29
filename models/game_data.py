@@ -1,19 +1,15 @@
 import json
-import os
 from dataclasses import dataclass
-
-DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data')
-FILE_PATH = os.path.join(DATA_DIR, 'games.json')
+from models import database
 
 @dataclass
 class GameData:
-    """Esta classe representa apenas os DADOS do jogo, não as regras."""
     id: int
     player1: int
     player2: int
     moves: list
     status: str
-    winner: str = None
+    winner: int = None # Mudei para int/None para bater com o banco
 
     def to_dict(self):
         return {
@@ -25,72 +21,73 @@ class GameData:
             'winner': self.winner
         }
 
-    @classmethod
-    def from_dict(cls, data):
-        return cls(
-            id=data['id'],
-            player1=data['player1'],
-            player2=data['player2'],
-            moves=data['moves'],
-            status=data['status'],
-            winner=data.get('winner')
+class GameModel:
+    def __init__(self):
+        pass
+
+    def _row_to_game(self, row):
+        """Método auxiliar para converter linha do banco em objeto GameData"""
+        return GameData(
+            id=row['id'],
+            player1=row['player1'],
+            player2=row['player2'],
+            moves=json.loads(row['moves']), # Converte Texto -> Lista
+            status=row['status'],
+            winner=row['winner']
         )
 
-class GameModel:
-    """Responsável apenas por ler e escrever no JSON"""
-    
     def get_all(self):
-        if not os.path.exists(FILE_PATH):
-            return []
-        try:
-            with open(FILE_PATH, 'r') as f:
-                data = json.load(f)
-                return [GameData.from_dict(item) for item in data]
-        except:
-            return []
-
-    def save_all(self, games_list):
-        os.makedirs(DATA_DIR, exist_ok=True)
-        
-        with open(FILE_PATH, 'w') as f:
-            json.dump([g.to_dict() for g in games_list], f, indent=4)
+        conn = database.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM games")
+        rows = cursor.fetchall()
+        conn.close()
+        return [self._row_to_game(row) for row in rows]
 
     def get_by_id(self, game_id):
-        games = self.get_all()
-        return next((g for g in games if g.id == game_id), None)
-
-    def save_game(self, game_data):
-        """Salva ou Atualiza um jogo"""
-        games = self.get_all()
+        conn = database.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM games WHERE id = ?", (game_id,))
+        row = cursor.fetchone()
+        conn.close()
         
-        for i, g in enumerate(games):
-            if g.id == game_data.id:
-                games[i] = game_data
-                self.save_all(games)
-                return
+        if row:
+            return self._row_to_game(row)
+        return None
 
-        games.append(game_data)
-        self.save_all(games)
+    def save_game(self, game_data: GameData):
+        conn = database.get_connection()
+        cursor = conn.cursor()
+        
+        moves_json = json.dumps(game_data.moves) # Converte Lista -> Texto
+        
+        # Verifica se o jogo já existe
+        cursor.execute("SELECT id FROM games WHERE id = ?", (game_data.id,))
+        exists = cursor.fetchone()
+
+        if exists:
+            cursor.execute('''
+                UPDATE games SET player1=?, player2=?, moves=?, status=?, winner=? WHERE id=?
+            ''', (game_data.player1, game_data.player2, moves_json, game_data.status, game_data.winner, game_data.id))
+        else:
+            cursor.execute('''
+                INSERT INTO games (player1, player2, moves, status, winner) VALUES (?, ?, ?, ?, ?)
+            ''', (game_data.player1, game_data.player2, moves_json, game_data.status, game_data.winner))
+            
+        conn.commit()
+        conn.close()
 
     def save_finished_game(self, player1_id, player2_id, moves, winner_id, status):
-        """Calcula ID, cria objeto e salva o jogo finalizado"""
-        games = self.get_all()
+        # Cria um objeto e reutiliza o save_game ou insere direto
+        # Para simplificar, inserindo direto:
+        conn = database.get_connection()
+        cursor = conn.cursor()
         
-        # Gera ID automático
-        if not games:
-            new_id = 1
-        else:
-            new_id = max(g.id for g in games) + 1
-            
-        new_game = GameData(
-            id=new_id,
-            player1=player1_id,
-            player2=player2_id,
-            moves=moves,
-            status=status,
-            winner=winner_id
-        )
+        moves_json = json.dumps(moves)
         
-        games.append(new_game)
-        self.save_all(games)
-        return new_id
+        cursor.execute('''
+            INSERT INTO games (player1, player2, moves, status, winner) VALUES (?, ?, ?, ?, ?)
+        ''', (player1_id, player2_id, moves_json, status, winner_id))
+        
+        conn.commit()
+        conn.close()
