@@ -64,5 +64,17 @@
         "name": "AuraFarmer77",
         "email": "aurafarmer77@gmail.com",
         "birthdate": "1996-12-03"
+    },
+    {
+        "id": 12,
+        "name": "Charlie Kirk",
+        "email": "charlie@gmail.com",
+        "birthdate": "1967-07-06"
+    },
+    {
+        "id": 13,
+        "name": "George Droid",
+        "email": "george@gmail.com",
+        "birthdate": "2025-11-29"
     }
 ]
