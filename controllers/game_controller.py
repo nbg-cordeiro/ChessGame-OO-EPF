@@ -1,35 +1,26 @@
 import json
+import random #temporario(daniel)
 from bottle import Bottle, request, response, redirect
 from .base_controller import BaseController
 from models.Game import Game
-
 from services.user_service import UserService 
 
 class GameController(BaseController):
     def __init__(self, app):
         super().__init__(app)
-        
         self.game = Game()
-        
-        
         self.user_service = UserService()
-        
         self.setup_routes()
 
     def setup_routes(self):
-
-    
         self.app.route('/', method='GET', callback=self.menu)
         self.app.route('/menu', method='GET', callback=self.menu)
-        
         self.app.route('/game/setup', method='GET', callback=self.setup_page)
-        
         self.app.route('/game/start', method='POST', callback=self.start_game)
-        
-    
         self.app.route('/game', method='GET', callback=self.index)
         self.app.route('/move', method='POST', callback=self.move_piece)
         self.app.route('/reset', method='POST', callback=self.reset_game)
+        self.app.route('/ranking', method='GET', callback=self.show_ranking)
 
 
     def menu(self):
@@ -65,6 +56,24 @@ class GameController(BaseController):
         
         return redirect('/game')
 
+    def show_ranking(self):
+        try:
+            todos_usuarios = self.user_service.get_all()
+            tabela_classificacao = []
+            for usuario in todos_usuarios:
+            
+                pontos = getattr(usuario, 'score', random.randint(0, 100)) 
+                tabela_classificacao.append({
+                    'name': usuario.name, 
+                    'score': pontos
+                })
+            tabela_classificacao.sort(key=lambda jogador: jogador['score'], reverse=True)
+            return self.render('ranking', players=tabela_classificacao)
+            
+        except Exception as erro:
+            print(f"Erro ao gerar ranking: {erro}")
+            return f"Não foi possível carregar o ranking: {str(erro)}"
+        
     #tabuleiro
 
     def index(self):
