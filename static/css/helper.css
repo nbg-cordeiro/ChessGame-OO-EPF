@@ -1,13 +1,9 @@
-/* application.css */
-
-/* Reset básico para remover estilos padrão */
 body, h1, h4, p, img {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Estilo para o corpo da página */
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
@@ -15,28 +11,25 @@ body {
     color: #333;
     padding: 20px;
     display: flex;
-    flex-direction: column; /* Adiciona esta linha para alinhar os itens em coluna */
-    justify-content: flex-start; /* Alinha o conteúdo no início, em vez de no centro */
+    flex-direction: column; 
+    justify-content: flex-start; 
     align-items: center;
     min-height: 100vh;
     margin: 0;
 }
 
-/* Estilo para o título */
 h1 {
     font-size: 2.5em;
     margin-bottom: 20px;
     color: #333;
 }
 
-/* Estilo para o subtítulo */
 h4 {
     font-size: 1.2em;
     margin-bottom: 30px;
     color: #777;
 }
 
-/* Estilo para a imagem */
 img {
     border-radius: 50%;
     cursor: pointer;
@@ -47,16 +40,15 @@ img:hover {
     transform: scale(1.1);
 }
 
-/* Centralizar o conteúdo dentro do container */
 .object_centered {
     text-align: center;
     background: #fff;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 20px; /* Adiciona espaçamento entre os blocos */
-    width: 100%; /* Garante que o bloco ocupe a largura total disponível */
-    max-width: 600px; /* Define uma largura máxima para limitar o tamanho */
+    margin-bottom: 20px; 
+    width: 100%; 
+    max-width: 600px; 
 }
 
 .justify-text {
@@ -72,8 +64,6 @@ img:hover {
      overflow-x: auto;
      text-align: justify;
 }
-
-/* application.css */
 
 .animated-message {
     position: fixed;

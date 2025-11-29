@@ -1,4 +1,3 @@
-
 <style>
     .conteiner-menu {
         display: flex;
@@ -18,6 +17,11 @@
     }
 
 
+    .botao-menu i {
+        margin-right: 15px;
+        font-size: 1.6rem;
+    }
+
     .botao-menu {
         display: flex;
         align-items: center;
@@ -33,17 +37,12 @@
         border: 2px solid transparent;
     }
 
-
-    .botao-menu i {
-        margin-right: 15px;
-        font-size: 1.6rem;
-    }
-
-    .btn-jogar {
+    .btn-iniciar_jogo {
         background-color: #27ae60;
         color: white;
+        font-size: 1.4rem;
     }
-    .btn-jogar:hover {
+    .btn-iniciar_jogo:hover {
         background-color: #219150;
         transform: scale(1.08); 
         box-shadow: 0 6px 10px rgba(0,0,0,0.2);
@@ -72,7 +71,7 @@
 <div class="conteiner-menu">
     <h1 class="titulo-jogo">♟️ Xadrez Real</h1>
 
-    <a href="/game/setup" class="botao-menu btn-jogar">
+    <a href="/game/setup" class="botao-menu btn-iniciar_jogo">
         <i class="fas fa-chess-board"></i> Iniciar Jogo
     </a>
 

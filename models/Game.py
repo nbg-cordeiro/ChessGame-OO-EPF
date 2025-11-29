@@ -56,7 +56,7 @@ class Game:
             return {"valid": False, "error": "No piece at start position"}
 
         if piece.color != self.turn:
-            return {"valid": False, "error": "Not your piece"}
+            return {"valid": False, "error": "Não é a sua vez!"}
 
         target_piece = self.getPiece(end)
 
@@ -78,7 +78,7 @@ class Game:
                 self.setPieceOn(temp_board, start, None)
 
                 if self.isKingInCheck(temp_board, self.turn):
-                    return {"valid": False, "error": "Illegal move: King would be in check"}
+                    return {"valid": False, "error": "Rei em cheque!"}
 
                 # Executa en passant real
                 self.board.game[LinhaEndInimigo][colEndInim] = None
@@ -112,11 +112,11 @@ class Game:
         self.setPieceOn(temp_board, start, None)
 
         if self.isKingInCheck(temp_board, self.turn):
-            return {"valid": False, "error": "Illegal move: King would be in check"}
+            return {"valid": False, "error": "Rei em cheque!"}
 
         # --- 4. Executar movimento normal ---
         if not piece.makeMoves(start, end, self.board):
-            return {"valid": False, "error": "Invalid move for this piece"}
+            return {"valid": False, "error": "Movimento inválido."}
 
         # Registrar última jogada
         self.ultimaJogada = {
