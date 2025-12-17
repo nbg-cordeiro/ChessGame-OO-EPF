@@ -68,7 +68,7 @@ xadrez-poo-bottle/
 │
 └── data/               # Banco de Dados
     └── chess_system.db         # Persistência dos jogadores e pontuação
-
+```
     ▶️ Como Executar
 Siga os passos abaixo para rodar o projeto na sua máquina:
 
@@ -115,11 +115,11 @@ Vitória: Ao dar Xeque-Mate, a pontuação será atualizada automaticamente no R
 🧠 Autores
 Projeto desenvolvido pelo trio:
 
-[Seu Nome Aqui] - Front-end, Controllers e Integração.
+[Daniel Filipe](https://github.com/daniel-fbo) - Front-end, Controllers e Integração.
 
-[Nome do Amigo 1] - Back-end (Motor de Xadrez e Lógica das Peças).
+[Eduardo Dal Pizol](https://github.com/Edupizzol) - Back-end (Motor de Xadrez e Lógica das Peças).
 
-[Nome do Amigo 2] - Services e Persistência de Dados.
+[João Pedro da Nóbrega](https://github.com/nbg-cordeiro) - Services e Persistência de Dados.
 
 📄 Licença
 Projeto desenvolvido como template didático baseado no BMVC. Livre para uso educacional e modificações.
