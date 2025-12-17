@@ -69,7 +69,7 @@ xadrez-poo-bottle/
 └── data/               # Banco de Dados
     └── chess_system.db         # Persistência dos jogadores e pontuação
 ```
-    ▶️ Como Executar
+## ▶️ Como Executar
 Siga os passos abaixo para rodar o projeto na sua máquina:
 
 1. Preparar o Ambiente
@@ -82,24 +82,28 @@ python -m venv venv
 
 # Ativa o ambiente
 # Windows:
+```
 venv\Scripts\activate
+```
 # Linux/Mac:
+```
 source venv/bin/activate
+```
 2. Instalar Dependências
 Bash
-
+```
 pip install -r requirements.txt
-
+```
 5. Adicionar instâncias teste
 Bash
-
+```
 python seed.py
-
+```
 5. Rodar o Servidor
 Bash
-
+```
 python main.py
-
+```
 6. Jogar
 Abra seu navegador e acesse: http://localhost:8080
 
