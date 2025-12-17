@@ -35,7 +35,7 @@ xadrez-poo-bottle/
 ├── main.py             # Ponto de entrada (Roda o servidor)
 ├── config.py           # Configurações globais
 ├── seed.py             # Instancia objetos de teste no banco de dados
-├── requirements.txt    # Dependências (bottle, etc)
+├── requirements.txt    # Dependências (bottle, etc...)
 │
 ├── controllers/        # A "Cola" do sistema
 │   ├── base_controller.py  # Utilitários comuns
@@ -62,7 +62,7 @@ xadrez-poo-bottle/
 │   └── ... (user views)
 │
 ├── static/             # Arquivos Estáticos
-│   ├── css/                # Estilos separados (game.css, menu.css, etc)
+│   ├── css/                # Estilos separados (game.css, menu.css, etc...)
 │   ├── img/pieces/         # SVGs das peças (Cburnett style)
 │   └── audio/              # Efeitos sonoros (move, capture, check, mate)
 │
